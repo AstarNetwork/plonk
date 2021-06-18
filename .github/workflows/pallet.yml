@@ -1,0 +1,18 @@
+name: Pallet Test
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master, develop ]
+
+jobs:
+  build_and_test:
+    name: Rust project
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+      - run: SKIP_WASM_BUILD=1 cargo check
