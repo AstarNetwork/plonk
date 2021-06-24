@@ -1,5 +1,5 @@
 # Plonk For Substrate
-[![Pallet Test](https://github.com/PlasmNetwork/plonk/actions/workflows/pallet.yml/badge.svg)](https://github.com/PlasmNetwork/plonk/actions/workflows/pallet.yml)  
+[![crates.io badge](https://img.shields.io/crates/v/pallet-plonk.svg)](https://crates.io/crates/pallet-plonk)[![Check Set-Up & Build](https://github.com/PlasmNetwork/plonk/actions/workflows/check.yml/badge.svg)](https://github.com/PlasmNetwork/plonk/actions/workflows/check.yml)  
 This library supports for using zkSNARK plonk on substrate and is implemented as an extension of [duck-network plonk](https://github.com/dusk-network/plonk).
 
 ## Abstract
