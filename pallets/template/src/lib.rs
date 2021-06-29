@@ -7,7 +7,7 @@ pub mod pallet {
     use frame_system::pallet_prelude::*;
 	use super::*;
 	use codec::{Encode, Decode};
-	use serde_derive::{Serialize, Deserialize};
+	use serde::{Serialize, Deserialize};
 
 	#[derive(Debug, PartialEq, Encode, Decode, MaxEncodedLen, Serialize, Deserialize)]
 	pub struct SrsContents {
