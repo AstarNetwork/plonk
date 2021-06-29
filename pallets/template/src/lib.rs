@@ -7,10 +7,11 @@ pub mod pallet {
     use frame_system::pallet_prelude::*;
 	use super::*;
 	use codec::{Encode, Decode};
+	use serde_derive::{Serialize, Deserialize};
 
-	#[derive(Debug, PartialEq, Encode, Decode, MaxEncodedLen)]
-	pub struct Hello {
-		greet: u64
+	#[derive(Debug, PartialEq, Encode, Decode, MaxEncodedLen, Serialize, Deserialize)]
+	pub struct SrsContents {
+		pairing: u64
 	}
 
 	#[pallet::config]
@@ -23,17 +24,28 @@ pub mod pallet {
 
 	#[pallet::storage]
 	#[pallet::getter(fn srs)]
-	pub type Srs<T: Config> = StorageValue<_, Hello>;
+	pub type Srs<T: Config> = StorageValue<_, SrsContents>;
 
-	// #[pallet::genesis_config]
-	// pub struct GenesisConfig {
-	// 	srs: String,
-	// }
+	#[pallet::genesis_config]
+	pub struct GenesisConfig {
+		srs: SrsContents,
+	}
 
-	// #[pallet::genesis_build]
-	// impl<T: Config> GenesisBuild<T> for GenesisConfig {
-	// 	fn build(&self) {
-	// 		<Srs<T>>::put(&self.srs);
-	// 	}
-	// }
+	#[cfg(feature = "std")]
+	impl Default for GenesisConfig {
+		fn default() -> Self {
+			Self {
+				srs: SrsContents {
+					pairing: 12345
+				},
+			}
+		}
+	}
+
+	#[pallet::genesis_build]
+	impl<T: Config> GenesisBuild<T> for GenesisConfig {
+		fn build(&self) {
+			<Srs<T>>::put(&self.srs);
+		}
+	}
 }

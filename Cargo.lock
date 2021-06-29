@@ -4158,6 +4158,7 @@ dependencies = [
  "max-encoded-len",
  "parity-scale-codec",
  "serde",
+ "serde_derive",
  "sp-core 3.0.0 (git+https://github.com/paritytech/substrate.git?rev=d6c33e7ec313f9bd5e319dc0a5a3ace5543f9617)",
  "sp-io 3.0.0 (git+https://github.com/paritytech/substrate.git?rev=d6c33e7ec313f9bd5e319dc0a5a3ace5543f9617)",
  "sp-runtime 3.0.0 (git+https://github.com/paritytech/substrate.git?rev=d6c33e7ec313f9bd5e319dc0a5a3ace5543f9617)",
