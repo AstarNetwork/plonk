@@ -1183,17 +1183,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "derive-hex"
-version = "0.1.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4b46013e62215b95b689114f9930b346350669e8a96a0789b553ea3874afe33b"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn",
-]
-
-[[package]]
 name = "derive_more"
 version = "0.99.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1279,57 +1268,6 @@ name = "downcast-rs"
 version = "1.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9ea835d29036a4087793836fa931b08837ad5e957da9e23886b29586fb9b6650"
-
-[[package]]
-name = "dusk-bls12_381"
-version = "0.8.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e22aa3d0bb1f8a54723a33b056022b2f71eca929a86e2e03653f18b9dff0b1b8"
-dependencies = [
- "byteorder",
- "dusk-bytes",
- "rand_core 0.6.3",
- "rayon",
- "subtle 2.4.0",
-]
-
-[[package]]
-name = "dusk-bytes"
-version = "0.1.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "056c83a28812838536595fe40866c8486125f003893cd65520df44b7f024d62b"
-dependencies = [
- "derive-hex",
-]
-
-[[package]]
-name = "dusk-jubjub"
-version = "0.10.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "daff9329e259ab5224a4b725d35ecf827c29abb9dd37576dd888b7b0fea0317a"
-dependencies = [
- "dusk-bls12_381",
- "dusk-bytes",
- "rand_core 0.6.3",
- "subtle 2.4.0",
-]
-
-[[package]]
-name = "dusk-plonk"
-version = "0.8.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f20fc83b84aab7c32da5986405a2bbf0d780fc873f82c192f143f9ca339cec0b"
-dependencies = [
- "cfg-if 1.0.0",
- "dusk-bls12_381",
- "dusk-bytes",
- "dusk-jubjub",
- "hashbrown",
- "itertools 0.9.0",
- "merlin 3.0.0",
- "rand_core 0.6.3",
- "rayon",
-]
 
 [[package]]
 name = "dyn-clonable"
@@ -3585,18 +3523,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "merlin"
-version = "3.0.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "58c38e2799fc0978b65dfff8023ec7843e2330bb462f19198840b34b6582397d"
-dependencies = [
- "byteorder",
- "keccak",
- "rand_core 0.6.3",
- "zeroize",
-]
-
-[[package]]
 name = "minicbor"
 version = "0.8.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4148,13 +4074,9 @@ dependencies = [
 name = "pallet-plonk"
 version = "0.0.1"
 dependencies = [
- "dusk-plonk",
  "frame-benchmarking 3.1.0 (git+https://github.com/paritytech/substrate.git?rev=d6c33e7ec313f9bd5e319dc0a5a3ace5543f9617)",
  "frame-support 3.0.0 (git+https://github.com/paritytech/substrate.git?rev=d6c33e7ec313f9bd5e319dc0a5a3ace5543f9617)",
  "frame-system 3.0.0 (git+https://github.com/paritytech/substrate.git?rev=d6c33e7ec313f9bd5e319dc0a5a3ace5543f9617)",
- "jsonrpc-core",
- "jsonrpc-core-client",
- "jsonrpc-derive",
  "max-encoded-len",
  "parity-scale-codec",
  "serde",
@@ -5608,7 +5530,7 @@ dependencies = [
  "futures 0.3.15",
  "futures-timer 3.0.2",
  "log",
- "merlin 2.0.1",
+ "merlin",
  "num-bigint",
  "num-rational 0.2.4",
  "num-traits",
@@ -5844,7 +5766,7 @@ dependencies = [
  "futures 0.3.15",
  "futures-util",
  "hex",
- "merlin 2.0.1",
+ "merlin",
  "parking_lot 0.11.1",
  "rand 0.7.3",
  "serde_json",
@@ -6286,7 +6208,7 @@ dependencies = [
  "arrayvec 0.5.2",
  "curve25519-dalek 2.1.2",
  "getrandom 0.1.16",
- "merlin 2.0.1",
+ "merlin",
  "rand 0.7.3",
  "rand_core 0.5.1",
  "serde",
@@ -6880,7 +6802,7 @@ version = "0.9.0"
 source = "git+https://github.com/paritytech/substrate.git?rev=d6c33e7ec313f9bd5e319dc0a5a3ace5543f9617#d6c33e7ec313f9bd5e319dc0a5a3ace5543f9617"
 dependencies = [
  "async-trait",
- "merlin 2.0.1",
+ "merlin",
  "parity-scale-codec",
  "serde",
  "sp-api 3.0.0 (git+https://github.com/paritytech/substrate.git?rev=d6c33e7ec313f9bd5e319dc0a5a3ace5543f9617)",
@@ -6937,7 +6859,7 @@ dependencies = [
  "lazy_static",
  "libsecp256k1",
  "log",
- "merlin 2.0.1",
+ "merlin",
  "num-traits",
  "parity-scale-codec",
  "parity-util-mem",
@@ -6982,7 +6904,7 @@ dependencies = [
  "libsecp256k1",
  "log",
  "max-encoded-len",
- "merlin 2.0.1",
+ "merlin",
  "num-traits",
  "parity-scale-codec",
  "parity-util-mem",
@@ -7175,7 +7097,7 @@ dependencies = [
  "async-trait",
  "derive_more",
  "futures 0.3.15",
- "merlin 2.0.1",
+ "merlin",
  "parity-scale-codec",
  "parking_lot 0.11.1",
  "schnorrkel",
@@ -7191,7 +7113,7 @@ dependencies = [
  "async-trait",
  "derive_more",
  "futures 0.3.15",
- "merlin 2.0.1",
+ "merlin",
  "parity-scale-codec",
  "parking_lot 0.11.1",
  "schnorrkel",

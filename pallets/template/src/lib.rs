@@ -1,3 +1,4 @@
+#![cfg_attr(not(feature = "std"), no_std)]
 pub use pallet::*;
 
 #[frame_support::pallet]
@@ -7,7 +8,7 @@ pub mod pallet {
     use frame_system::pallet_prelude::*;
 	use super::*;
 	use codec::{Encode, Decode};
-	use serde::{Serialize, Deserialize};
+	use serde_derive::{Serialize, Deserialize};
 
 	#[derive(Debug, PartialEq, Encode, Decode, MaxEncodedLen, Serialize, Deserialize)]
 	pub struct SrsContents {
