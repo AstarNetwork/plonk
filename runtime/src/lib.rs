@@ -275,9 +275,7 @@ impl pallet_sudo::Config for Runtime {
 }
 
 /// Configure the pallet-plonk in pallets/template.
-impl pallet_plonk::Config for Runtime {
-	type Event = Event;
-}
+impl pallet_plonk::Config for Runtime {}
 
 // Create the runtime by composing the FRAME pallets that were previously configured.
 construct_runtime!(
@@ -295,7 +293,7 @@ construct_runtime!(
 		TransactionPayment: pallet_transaction_payment::{Pallet, Storage},
 		Sudo: pallet_sudo::{Pallet, Call, Config<T>, Storage, Event<T>},
 		// Include the custom logic from the pallet-plonk in the runtime.
-		TemplateModule: pallet_plonk::{Pallet, Call, Storage, Event<T>},
+		TemplateModule: pallet_plonk::{Pallet, Storage},
 	}
 );
 
