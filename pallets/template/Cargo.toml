@@ -13,11 +13,20 @@ version = '0.0.1'
 targets = ['x86_64-unknown-linux-gnu']
 
 [dependencies]
-serde_derive = { version = "1.0.119" }
+jsonrpc-core = "17.0"
+jsonrpc-core-client = "17.0"
+jsonrpc-derive = "17.0"
 
 [dependencies.serde]
-version = '1.0.119'
+version = '1'
 default-features = false
+features = ["derive"]
+
+[dev-dependencies.sp-rpc]
+default-features = false
+git = 'https://github.com/paritytech/substrate.git'
+rev = 'd6c33e7ec313f9bd5e319dc0a5a3ace5543f9617'
+version = '3.0.0'
 
 [dev-dependencies.sp-core]
 default-features = false

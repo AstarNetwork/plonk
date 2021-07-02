@@ -1,19 +1,12 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 pub use pallet::*;
 
+mod srs;
+
 #[frame_support::pallet]
 pub mod pallet {
     use frame_support::pallet_prelude::*;
-    use max_encoded_len::MaxEncodedLen;
-    use frame_system::pallet_prelude::*;
-	use super::*;
-	use codec::{Encode, Decode};
-	use serde_derive::{Serialize, Deserialize};
-
-	#[derive(Debug, PartialEq, Encode, Decode, MaxEncodedLen, Serialize, Deserialize)]
-	pub struct SrsContents {
-		pairing: u64
-	}
+	use crate::srs::SrsContents;
 
 	#[pallet::config]
 	pub trait Config: frame_system::Config {}
