@@ -1,7 +1,7 @@
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-        assert_eq!(2 + 2, 4);
-    }
-}
+mod srs;
+
+// #[rpc]
+// pub trait PlonkStorageApi {
+//     #[rpc(name = "plonk_get_srs")]
+//     fn get_srs(&self) -> Result<
+// }

@@ -4099,6 +4099,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "pallet-plonk-rpc"
+version = "0.1.0"
+dependencies = [
+ "max-encoded-len",
+ "parity-scale-codec",
+ "serde",
+ "serde_derive",
+]
+
+[[package]]
 name = "pallet-randomness-collective-flip"
 version = "3.0.0"
 source = "git+https://github.com/paritytech/substrate.git?rev=d6c33e7ec313f9bd5e319dc0a5a3ace5543f9617#d6c33e7ec313f9bd5e319dc0a5a3ace5543f9617"
