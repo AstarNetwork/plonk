@@ -3,9 +3,12 @@ pub use pallet::*;
 
 mod srs;
 
+use crate::srs::SrsContents;
+
 #[frame_support::pallet]
 pub mod pallet {
     use frame_support::pallet_prelude::*;
+	// use frame_system::pallet_prelude::*;
 	use crate::srs::SrsContents;
 
 	#[pallet::config]
@@ -41,5 +44,11 @@ pub mod pallet {
 		fn build(&self) {
 			<Srs<T>>::put(&self.srs);
 		}
+	}
+}
+
+impl<T: Config> Pallet<T> {
+	pub fn get_srs() -> Option<SrsContents> {
+		Srs::<T>::get()
 	}
 }
