@@ -16,3 +16,9 @@
 
 # direnv cache
 .direnv
+
+
+# Added by cargo
+
+/target
+Cargo.lock
