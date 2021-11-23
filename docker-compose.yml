@@ -1,0 +1,10 @@
+version: '3'
+services:
+    plonk:
+        build: .
+        container_name: plonk
+        tty: true
+        stdin_open: true
+        volumes:
+        - .:/app
+        - /app/target
