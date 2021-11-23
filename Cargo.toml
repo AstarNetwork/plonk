@@ -10,6 +10,11 @@ repository = 'https://github.com/PlasmNetwork/plonk/'
 version = '0.0.1'
 
 [dependencies]
+# dusk plonk
+dusk-plonk = { version = "0.9.0" }
+dusk-jubjub = {version = "0.10", default-features = false}
+rand_core = {version="0.6", default-features=false}
+# substrate pallet
 parity-scale-codec = { version = "2.0", default-features = false, features = ["derive"] }
 frame-support = { version = '3.0', default-features = false}
 frame-system = { version = '3.0', default-features = false}
@@ -24,6 +29,7 @@ sp-io = '3.0'
 [features]
 default = ["std"]
 std = [
+    "rand_core/std",
 	"parity-scale-codec/std",
 	"sp-std/std",
 	"sp-runtime/std",
