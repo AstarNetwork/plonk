@@ -1,11 +1,10 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 #![allow(clippy::unused_unit)]
-//! A simple pallet with two storage values. The pallet itself does not teach any new concepts.
-//! Rather we use this pallet as demonstration case as we demonstrate custom runtime APIs.
-//! This pallet supports a runtime API which will allow querying the runtime for the sum of
-//! the two storage items.
 
 pub use pallet::*;
+
+#[cfg(test)]
+mod tests;
 
 #[frame_support::pallet]
 pub mod pallet {
@@ -41,6 +40,7 @@ pub mod pallet {
     #[pallet::genesis_build]
     impl<T: Config> GenesisBuild<T> for GenesisConfig {
         fn build(&self) {
+            <PublicParameter<T>>::put(PublicParameters::setup(1 << 12, &mut OsRng).unwrap());
             todo!()
         }
     }
