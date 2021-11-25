@@ -20,6 +20,7 @@ frame-support = { version = '3.0', default-features = false}
 frame-system = { version = '3.0', default-features = false}
 sp-runtime = { version = '3.0', default-features = false}
 sp-std = { version = '3.0', default-features = false}
+serde = { versions = "1.0.130", features = ["derive"] }
 
 [dev-dependencies]
 serde = '1.0'

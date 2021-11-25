@@ -12,17 +12,38 @@ pub mod pallet {
     use dusk_plonk::prelude::*;
     use frame_support::pallet_prelude::*;
     use frame_system::pallet_prelude::*;
+    use rand_core::OsRng;
 
     /// The module's configuration trait.
     #[pallet::config]
     pub trait Config: frame_system::Config {
-        /// The overarching event type.
         type Event: From<Event<Self>> + IsType<<Self as frame_system::Config>::Event>;
     }
 
     #[pallet::storage]
     #[pallet::getter(fn public_parameter)]
-    pub type PublicParameterStorage<T: Config> = StorageValue<_, PublicParameters>;
+    pub type PublicParameter<T: Config> = StorageValue<_, PublicParameters>;
+
+    #[pallet::genesis_config]
+    pub struct GenesisConfig {
+        pub public_parameter: PublicParameters,
+    }
+
+    #[cfg(feature = "std")]
+    impl Default for GenesisConfig {
+        fn default() -> Self {
+            Self {
+                public_parameter: PublicParameters::setup(1 << 12, &mut OsRng).unwrap(),
+            }
+        }
+    }
+
+    #[pallet::genesis_build]
+    impl<T: Config> GenesisBuild<T> for GenesisConfig {
+        fn build(&self) {
+            todo!()
+        }
+    }
 
     #[pallet::event]
     #[pallet::metadata(u32 = "Metadata")]

@@ -417,6 +417,7 @@ dependencies = [
  "parity-scale-codec",
  "rand_core 0.6.3",
  "rayon",
+ "serde",
  "subtle 2.4.1",
 ]
 
@@ -453,6 +454,7 @@ dependencies = [
  "parity-scale-codec",
  "rand_core 0.6.3",
  "rayon",
+ "serde",
 ]
 
 [[package]]
@@ -2057,6 +2059,7 @@ name = "subtle"
 version = "2.4.1"
 dependencies = [
  "parity-scale-codec",
+ "serde",
 ]
 
 [[package]]
