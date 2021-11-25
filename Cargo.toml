@@ -11,8 +11,8 @@ version = '0.0.1'
 
 [dependencies]
 # dusk plonk
-dusk-plonk = { version = "0.9.0" }
-dusk-jubjub = {version = "0.10", default-features = false}
+dusk-plonk = { path = "./dusk-plonk" }
+dusk-jubjub = { path = "./jubjub" }
 rand_core = {version="0.6", default-features=false}
 # substrate pallet
 parity-scale-codec = { version = "2.0", default-features = false, features = ["derive"] }

@@ -327,7 +327,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b584a330336237c1eecd3e94266efb216c56ed91225d634cb2991c5f3fd1aeab"
 dependencies = [
  "generic-array 0.14.4",
- "subtle 2.4.1",
+ "subtle 2.4.1 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -337,7 +337,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b1d1a86f49236c215f271d40892d5fc950490551400b02ef360692c29815c714"
 dependencies = [
  "generic-array 0.14.4",
- "subtle 2.4.1",
+ "subtle 2.4.1 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -349,7 +349,7 @@ dependencies = [
  "byteorder",
  "digest 0.8.1",
  "rand_core 0.5.1",
- "subtle 2.4.1",
+ "subtle 2.4.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "zeroize",
 ]
 
@@ -362,7 +362,7 @@ dependencies = [
  "byteorder",
  "digest 0.9.0",
  "rand_core 0.5.1",
- "subtle 2.4.1",
+ "subtle 2.4.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "zeroize",
 ]
 
@@ -411,11 +411,10 @@ dependencies = [
 [[package]]
 name = "dusk-bls12_381"
 version = "0.8.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e22aa3d0bb1f8a54723a33b056022b2f71eca929a86e2e03653f18b9dff0b1b8"
 dependencies = [
  "byteorder",
  "dusk-bytes",
+ "parity-scale-codec",
  "rand_core 0.6.3",
  "rayon",
  "subtle 2.4.1",
@@ -433,8 +432,6 @@ dependencies = [
 [[package]]
 name = "dusk-jubjub"
 version = "0.10.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f842f5a6811741a236f46d4b7cd9da8a21e435e3395b4c3878681e0bb8e38d6f"
 dependencies = [
  "dusk-bls12_381",
  "dusk-bytes",
@@ -445,8 +442,6 @@ dependencies = [
 [[package]]
 name = "dusk-plonk"
 version = "0.9.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1f56f95e1721c7cc035fdfa6976caf7c038dc068ce25e86ed02d94a2c4a2587e"
 dependencies = [
  "cfg-if",
  "dusk-bls12_381",
@@ -455,6 +450,7 @@ dependencies = [
  "hashbrown 0.9.1",
  "itertools",
  "merlin 3.0.0",
+ "parity-scale-codec",
  "rand_core 0.6.3",
  "rayon",
 ]
@@ -972,7 +968,7 @@ dependencies = [
  "hmac-drbg",
  "rand 0.7.3",
  "sha2 0.8.2",
- "subtle 2.4.1",
+ "subtle 2.4.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "typenum",
 ]
 
@@ -1591,7 +1587,7 @@ dependencies = [
  "rand_core 0.5.1",
  "serde",
  "sha2 0.8.2",
- "subtle 2.4.1",
+ "subtle 2.4.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "zeroize",
 ]
 
@@ -2055,6 +2051,13 @@ name = "subtle"
 version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2d67a5a62ba6e01cb2192ff309324cb4875d0c451d55fe2319433abe7a05a8ee"
+
+[[package]]
+name = "subtle"
+version = "2.4.1"
+dependencies = [
+ "parity-scale-codec",
+]
 
 [[package]]
 name = "subtle"

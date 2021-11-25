@@ -9,6 +9,7 @@ pub use pallet::*;
 
 #[frame_support::pallet]
 pub mod pallet {
+    use dusk_plonk::prelude::*;
     use frame_support::pallet_prelude::*;
     use frame_system::pallet_prelude::*;
 
@@ -18,6 +19,10 @@ pub mod pallet {
         /// The overarching event type.
         type Event: From<Event<Self>> + IsType<<Self as frame_system::Config>::Event>;
     }
+
+    #[pallet::storage]
+    #[pallet::getter(fn public_parameter)]
+    pub type PublicParameterStorage<T: Config> = StorageValue<_, PublicParameters>;
 
     #[pallet::event]
     #[pallet::metadata(u32 = "Metadata")]
