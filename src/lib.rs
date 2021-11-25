@@ -23,31 +23,11 @@ pub mod pallet {
     #[pallet::getter(fn public_parameter)]
     pub type PublicParameter<T: Config> = StorageValue<_, PublicParameters>;
 
-    #[pallet::genesis_config]
-    pub struct GenesisConfig {
-        pub public_parameter: PublicParameters,
-    }
-
-    #[cfg(feature = "std")]
-    impl Default for GenesisConfig {
-        fn default() -> Self {
-            Self {
-                public_parameter: PublicParameters::setup(1 << 12, &mut OsRng).unwrap(),
-            }
-        }
-    }
-
-    #[pallet::genesis_build]
-    impl<T: Config> GenesisBuild<T> for GenesisConfig {
-        fn build(&self) {
-            <PublicParameter<T>>::put(PublicParameters::setup(1 << 12, &mut OsRng).unwrap());
-            todo!()
-        }
-    }
-
     #[pallet::event]
     #[pallet::metadata(u32 = "Metadata")]
-    pub enum Event<T: Config> {}
+    pub enum Event<T: Config> {
+        TrustedSetup(PublicParameters),
+    }
 
     #[pallet::pallet]
     #[pallet::generate_store(pub(super) trait Store)]
@@ -57,7 +37,17 @@ pub mod pallet {
     impl<T: Config> Hooks<BlockNumberFor<T>> for Pallet<T> {}
 
     #[pallet::call]
-    impl<T: Config> Pallet<T> {}
+    impl<T: Config> Pallet<T> {
+        #[pallet::weight(10_000)]
+        pub fn trusted_setup(origin: OriginFor<T>, val: u32) -> DispatchResultWithPostInfo {
+            let _ = ensure_signed(origin)?;
+            let pp = PublicParameters::setup(1 << val, &mut OsRng).unwrap();
+            PublicParameter::<T>::put(&pp);
+
+            Event::<T>::TrustedSetup(pp);
+            Ok(().into())
+        }
+    }
 }
 
 impl<T: Config> Pallet<T> {}

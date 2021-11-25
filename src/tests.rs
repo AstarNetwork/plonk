@@ -1,6 +1,6 @@
 use crate::{self as plonk, Config};
 
-use frame_support::{construct_runtime, parameter_types};
+use frame_support::{assert_ok, construct_runtime, parameter_types};
 use sp_core::H256;
 use sp_runtime::{
     testing::Header,
@@ -65,6 +65,6 @@ fn new_test_ext() -> sp_io::TestExternalities {
 #[test]
 fn public_parameter() {
     new_test_ext().execute_with(|| {
-        println!("{:?}", Plonk::public_parameter());
+        assert_ok!(Plonk::trusted_setup(Origin::signed(1), 12));
     });
 }
