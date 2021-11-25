@@ -1,5 +1,7 @@
 use crate::{self as plonk, Config};
 
+use dusk_jubjub;
+use dusk_plonk::prelude::*;
 use frame_support::{assert_ok, construct_runtime, parameter_types};
 use sp_core::H256;
 use sp_runtime::{
@@ -62,9 +64,90 @@ fn new_test_ext() -> sp_io::TestExternalities {
         .into()
 }
 
+#[derive(Debug, Default)]
+pub struct TestCircuit {
+    a: BlsScalar,
+    b: BlsScalar,
+    c: BlsScalar,
+    d: BlsScalar,
+    e: JubJubScalar,
+    f: JubJubAffine,
+}
+
+impl Circuit for TestCircuit {
+    const CIRCUIT_ID: [u8; 32] = [0xff; 32];
+    fn gadget(&mut self, composer: &mut TurboComposer) -> Result<(), Error> {
+        let a = composer.append_witness(self.a);
+        let b = composer.append_witness(self.b);
+
+        // Make first constraint a + b = c
+        let constraint = Constraint::new().left(1).right(1).public(-self.c).a(a).b(b);
+
+        composer.append_gate(constraint);
+
+        // Check that a and b are in range
+        composer.component_range(a, 1 << 6);
+        composer.component_range(b, 1 << 5);
+
+        // Make second constraint a * b = d
+        let constraint = Constraint::new()
+            .mult(1)
+            .output(1)
+            .public(-self.d)
+            .a(a)
+            .b(b);
+
+        composer.append_gate(constraint);
+
+        let e = composer.append_witness(self.e);
+        let scalar_mul_result =
+            composer.component_mul_generator(e, dusk_jubjub::GENERATOR_EXTENDED);
+        // Apply the constrain
+        composer.assert_equal_public_point(scalar_mul_result, self.f);
+        Ok(())
+    }
+
+    fn public_inputs(&self) -> Vec<PublicInputValue> {
+        vec![self.c.into(), self.d.into(), self.f.into()]
+    }
+
+    fn padded_gates(&self) -> usize {
+        1 << 11
+    }
+}
+
 #[test]
-fn public_parameter() {
+fn plonk() {
     new_test_ext().execute_with(|| {
         assert_ok!(Plonk::trusted_setup(Origin::signed(1), 12));
+
+        let pp = Plonk::public_parameter().unwrap();
+
+        let mut circuit = TestCircuit::default();
+
+        let (pk, vd) = circuit.compile(&pp).unwrap();
+
+        let proof = {
+            let mut circuit = TestCircuit {
+                a: BlsScalar::from(20u64),
+                b: BlsScalar::from(5u64),
+                c: BlsScalar::from(25u64),
+                d: BlsScalar::from(100u64),
+                e: JubJubScalar::from(2u64),
+                f: JubJubAffine::from(dusk_jubjub::GENERATOR_EXTENDED * JubJubScalar::from(2u64)),
+            };
+            circuit.prove(&pp, &pk, b"Test").unwrap()
+        };
+
+        let public_inputs: Vec<PublicInputValue> = vec![
+            BlsScalar::from(25u64).into(),
+            BlsScalar::from(100u64).into(),
+            JubJubAffine::from(dusk_jubjub::GENERATOR_EXTENDED * JubJubScalar::from(2u64)).into(),
+        ];
+
+        assert_eq!(
+            TestCircuit::verify(&pp, &vd, &proof, &public_inputs, b"Test").unwrap(),
+            ()
+        );
     });
 }
