@@ -1,9 +1,6 @@
 [submodule "dusk-plonk"]
 	path = dusk-plonk
 	url = git@github.com:PlasmNetwork/dusk-plonk.git
-[submodule "bls12_381"]
-	path = bls12_381
-	url = git@github.com:PlasmNetwork/bls12_381.git
 [submodule "jubjub"]
 	path = jubjub
 	url = git@github.com:PlasmNetwork/jubjub.git

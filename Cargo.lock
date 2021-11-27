@@ -411,6 +411,7 @@ dependencies = [
 [[package]]
 name = "dusk-bls12_381"
 version = "0.8.0"
+source = "git+https://github.com/PlasmNetwork/bls12_381?rev=177a0911b050316984197d2f2bea9f0c9799e214#177a0911b050316984197d2f2bea9f0c9799e214"
 dependencies = [
  "byteorder",
  "dusk-bytes",
