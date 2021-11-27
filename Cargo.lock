@@ -445,6 +445,7 @@ dependencies = [
 [[package]]
 name = "dusk-plonk"
 version = "0.9.0"
+source = "git+https://github.com/PlasmNetwork/dusk-plonk?rev=0e9d99425cccbc75a6b586bca5b10e2e35bc85c0#0e9d99425cccbc75a6b586bca5b10e2e35bc85c0"
 dependencies = [
  "cfg-if",
  "dusk-bls12_381",

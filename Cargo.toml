@@ -11,7 +11,7 @@ version = '0.0.1'
 
 [dependencies]
 # dusk plonk
-dusk-plonk = { path = "./dusk-plonk" }
+dusk-plonk = { git = "https://github.com/PlasmNetwork/dusk-plonk", rev = "0e9d99425cccbc75a6b586bca5b10e2e35bc85c0" }
 dusk-jubjub = { git = "https://github.com/PlasmNetwork/jubjub", rev = "1c24aa0cb4f7288c830cdbeb3c6bdd5456c9852a" }
 rand_core = {version="0.6", default-features=false}
 # substrate pallet
