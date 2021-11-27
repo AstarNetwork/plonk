@@ -123,11 +123,71 @@ impl Circuit for TestCircuit {
 fn trusted_setup() {
     new_test_ext().execute_with(|| {
         assert_ok!(Plonk::trusted_setup(Origin::signed(1), 12));
+
         assert_eq!(
             Plonk::trusted_setup(Origin::signed(1), 12),
             Err(DispatchErrorWithPostInfo {
                 post_info: PostDispatchInfo::from(()),
                 error: DispatchError::Other("already setup"),
+            })
+        );
+    })
+}
+
+#[test]
+fn verify() {
+    new_test_ext().execute_with(|| {
+        assert_ok!(Plonk::trusted_setup(Origin::signed(1), 12));
+
+        let pp = Plonk::public_parameter().unwrap();
+
+        let mut circuit = TestCircuit::default();
+
+        let (pk, vd) = circuit.compile(&pp).unwrap();
+
+        let proof = {
+            let mut circuit = TestCircuit {
+                a: BlsScalar::from(20u64),
+                b: BlsScalar::from(5u64),
+                c: BlsScalar::from(25u64),
+                d: BlsScalar::from(100u64),
+                e: JubJubScalar::from(2u64),
+                f: JubJubAffine::from(dusk_jubjub::GENERATOR_EXTENDED * JubJubScalar::from(2u64)),
+            };
+            circuit.prove(&pp, &pk, b"Test").unwrap()
+        };
+
+        let public_inputs: Vec<PublicInputValue> = vec![
+            BlsScalar::from(25u64).into(),
+            BlsScalar::from(100u64).into(),
+            JubJubAffine::from(dusk_jubjub::GENERATOR_EXTENDED * JubJubScalar::from(2u64)).into(),
+        ];
+
+        let fake_public_inputs: Vec<PublicInputValue> = vec![
+            BlsScalar::from(24u64).into(),
+            BlsScalar::from(100u64).into(),
+            JubJubAffine::from(dusk_jubjub::GENERATOR_EXTENDED * JubJubScalar::from(2u64)).into(),
+        ];
+
+        assert_ok!(Plonk::verify(
+            Origin::signed(1),
+            vd.clone(),
+            proof.clone(),
+            public_inputs,
+            Transcript(b"Test")
+        ));
+
+        assert_eq!(
+            Plonk::verify(
+                Origin::signed(1),
+                vd,
+                proof,
+                fake_public_inputs,
+                Transcript(b"Test")
+            ),
+            Err(DispatchErrorWithPostInfo {
+                post_info: PostDispatchInfo::from(()),
+                error: DispatchError::Other("invalid proof"),
             })
         );
     })

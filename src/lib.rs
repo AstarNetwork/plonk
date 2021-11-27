@@ -71,9 +71,21 @@ pub mod pallet {
             let _ = ensure_signed(origin)?;
             match Self::public_parameter() {
                 Some(pp) => {
-                    T::CustomCircuit::verify(&pp, &vd, &proof, &public_inputs, transcript_init.0)
-                        .expect("verify process is in valid");
-                    Ok(().into())
+                    match T::CustomCircuit::verify(
+                        &pp,
+                        &vd,
+                        &proof,
+                        &public_inputs,
+                        transcript_init.0,
+                    ) {
+                        Ok(_) => return Ok(().into()),
+                        Err(_) => {
+                            return Err(DispatchErrorWithPostInfo {
+                                post_info: PostDispatchInfo::from(()),
+                                error: DispatchError::Other("invalid proof"),
+                            })
+                        }
+                    }
                 }
                 None => {
                     return Err(DispatchErrorWithPostInfo {
