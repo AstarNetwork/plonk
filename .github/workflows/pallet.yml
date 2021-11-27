@@ -4,14 +4,32 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master, develop ]
+
 jobs:
-  build_and_test:
-    name: Rust project
+  build:
+    name: Pallet Build
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v2
       - uses: actions-rs/toolchain@v1
+      - name: Add Target
+        run: rustup target add wasm32-unknown-unknown
+      - name: Build
+        uses: actions-rs/cargo@v1
         with:
-          toolchain: nightly
-      - name: Test
-        run : docker-compose up
+          command: build
+          args: --all-features
+
+  test:
+    name: Pallet Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+      - name: Build
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
+          args: --verbose --release --all --all-features
