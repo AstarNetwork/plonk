@@ -27,6 +27,7 @@ serde = '1.0'
 sp-core = '3.0'
 sp-io = '3.0'
 criterion = "0.3"
+ark-std = { version = "0.3", features = ["print-trace"] }
 
 [features]
 default = ["std"]

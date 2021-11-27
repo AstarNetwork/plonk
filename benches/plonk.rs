@@ -5,6 +5,7 @@ use dusk_plonk::prelude::*;
 use plonk_pallet as plonk;
 use plonk_pallet::{Config, Transcript};
 
+use ark_std::{end_timer, start_timer};
 use frame_support::{construct_runtime, parameter_types};
 use sp_core::H256;
 use sp_runtime::{
@@ -120,9 +121,12 @@ impl Circuit for TestCircuit {
     }
 }
 
-fn plonk_benchmark(name: String, k: u32, c: &mut Criterion) {
+fn plonk_benchmark(k: u32, _: &mut Criterion) {
     new_test_ext().execute_with(|| {
+        let description = format!("setup start with degree {}", k);
+        let setup_timer = start_timer!(|| description);
         Plonk::trusted_setup(Origin::signed(1), k).unwrap();
+        end_timer!(setup_timer);
 
         let pp = Plonk::public_parameter().unwrap();
 
@@ -148,25 +152,24 @@ fn plonk_benchmark(name: String, k: u32, c: &mut Criterion) {
             JubJubAffine::from(dusk_jubjub::GENERATOR_EXTENDED * JubJubScalar::from(2u64)).into(),
         ];
 
-        c.bench_function(name.as_str(), |b| {
-            b.iter(|| {
-                Plonk::verify(
-                    Origin::signed(1),
-                    vd.clone(),
-                    proof.clone(),
-                    public_inputs.clone(),
-                    Transcript(b"Test"),
-                )
-                .unwrap();
-            })
-        })
+        let description = format!("setup start with degree {}", k);
+        let verify_timer = start_timer!(|| description);
+        Plonk::verify(
+            Origin::signed(1),
+            vd.clone(),
+            proof.clone(),
+            public_inputs.clone(),
+            Transcript(b"Test"),
+        )
+        .unwrap();
+        end_timer!(verify_timer);
     });
 }
 
 fn plonk_benchmarks(c: &mut Criterion) {
     for i in 0..10 {
         let k = i + 12;
-        plonk_benchmark(format!("verify degree with {k}"), k, c);
+        plonk_benchmark(k, c);
     }
 }
 
