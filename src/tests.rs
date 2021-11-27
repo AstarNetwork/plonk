@@ -145,9 +145,13 @@ fn plonk() {
             JubJubAffine::from(dusk_jubjub::GENERATOR_EXTENDED * JubJubScalar::from(2u64)).into(),
         ];
 
-        assert_eq!(
-            TestCircuit::verify(&pp, &vd, &proof, &public_inputs, b"Test").unwrap(),
-            ()
-        );
+        assert_ok!(Plonk::verify(
+            Origin::signed(1),
+            pp,
+            vd,
+            proof,
+            public_inputs,
+            b"Test".to_vec()
+        ));
     });
 }

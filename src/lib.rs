@@ -53,8 +53,8 @@ pub mod pallet {
             pp: PublicParameters,
             vd: VerifierData,
             proof: Proof,
-            // public_inputs: &'static [PublicInputValue],
-            // transcript_init: &'static [u8],
+            public_inputs: Vec<PublicInputValue>,
+            transcript_init: Vec<u8>,
         ) -> DispatchResultWithPostInfo {
             let _ = ensure_signed(origin)?;
             Ok(().into())
