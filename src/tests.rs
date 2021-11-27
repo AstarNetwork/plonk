@@ -67,6 +67,13 @@ fn new_test_ext() -> sp_io::TestExternalities {
         .into()
 }
 
+// Implement a circuit that checks:
+// 1) a + b = c where C is a PI
+// 2) a <= 2^6
+// 3) b <= 2^5
+// 4) a * b = d where D is a PI
+// 5) JubJub::GENERATOR * e(JubJubScalar) = f where F is a Public Input
+
 #[derive(Debug, Default)]
 pub struct TestCircuit {
     a: BlsScalar,
@@ -119,6 +126,7 @@ impl Circuit for TestCircuit {
     }
 }
 
+/// The trusted setup test Ok and Err
 #[test]
 fn trusted_setup() {
     new_test_ext().execute_with(|| {
@@ -134,6 +142,7 @@ fn trusted_setup() {
     })
 }
 
+/// The verify test Ok and Err
 #[test]
 fn verify() {
     new_test_ext().execute_with(|| {
@@ -193,6 +202,7 @@ fn verify() {
     })
 }
 
+/// The plonk integration test only Ok
 #[test]
 fn plonk() {
     new_test_ext().execute_with(|| {

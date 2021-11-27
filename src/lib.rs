@@ -1,3 +1,40 @@
+// Copyright (C) 2020-2021 Artree (JP) LLC.
+// SPDX-License-Identifier: Apache-2.0
+
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// 	http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+//! # Plonk Pallet
+//!
+//! - [`Config`]
+//! - [`Call`]
+//! - [`Pallet`]
+//!
+//! ## Overview
+//!
+//! The Plonk pallet provides functions for:
+//!
+//! - Setup parameters
+//! - Verify zkp proof
+//!
+//! ### Terminology
+//!
+//! - **Custome Circuit** The circuit type should be replaced with your own circuit.
+//! This circuit should be defined on both blockchain runtime and offchain client.
+//!
+//! - **Public Parameter** The parameter generated during setup. The users can use
+//! this parameter to prove their transaction validity. This parameter can be gotten
+//! throught RPC client.
+
 #![cfg_attr(not(feature = "std"), no_std)]
 #![allow(clippy::unused_unit)]
 
@@ -19,17 +56,22 @@ pub mod pallet {
 
     #[pallet::config]
     pub trait Config: frame_system::Config {
+        /// The circuit customized by developer.
         type CustomCircuit: Circuit;
+
+        /// The overarching event type.
         type Event: From<Event<Self>> + IsType<<Self as frame_system::Config>::Event>;
     }
 
     #[pallet::storage]
     #[pallet::getter(fn public_parameter)]
+    /// The setup parameter referred to as SRS
     pub type PublicParameter<T: Config> = StorageValue<_, PublicParameters>;
 
     #[pallet::event]
     #[pallet::metadata(u32 = "Metadata")]
     pub enum Event<T: Config> {
+        /// The event called when setup parameter
         TrustedSetup(PublicParameters),
     }
 
@@ -42,6 +84,7 @@ pub mod pallet {
 
     #[pallet::call]
     impl<T: Config> Pallet<T> {
+        /// The function called when we setup the parameters
         #[pallet::weight(10_000)]
         pub fn trusted_setup(origin: OriginFor<T>, val: u32) -> DispatchResultWithPostInfo {
             let _ = ensure_signed(origin)?;
@@ -61,6 +104,7 @@ pub mod pallet {
             }
         }
 
+        /// The function called when we verify the statement
         #[pallet::weight(10_000)]
         pub fn verify(
             origin: OriginFor<T>,
@@ -105,6 +149,7 @@ impl<T: Config> Pallet<T> {
     }
 }
 
+/// The struct for Merlin transcript
 #[derive(Debug, PartialEq, Clone, Encode)]
 pub struct Transcript(pub &'static [u8]);
 
