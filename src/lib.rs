@@ -13,7 +13,6 @@ pub mod pallet {
     use frame_system::pallet_prelude::*;
     use rand_core::OsRng;
 
-    /// The module's configuration trait.
     #[pallet::config]
     pub trait Config: frame_system::Config {
         type Event: From<Event<Self>> + IsType<<Self as frame_system::Config>::Event>;
@@ -45,6 +44,19 @@ pub mod pallet {
             PublicParameter::<T>::put(&pp);
 
             Event::<T>::TrustedSetup(pp);
+            Ok(().into())
+        }
+
+        #[pallet::weight(10_000)]
+        pub fn verify(
+            origin: OriginFor<T>,
+            pp: PublicParameters,
+            vd: VerifierData,
+            proof: Proof,
+            // public_inputs: &'static [PublicInputValue],
+            // transcript_init: &'static [u8],
+        ) -> DispatchResultWithPostInfo {
+            let _ = ensure_signed(origin)?;
             Ok(().into())
         }
     }
