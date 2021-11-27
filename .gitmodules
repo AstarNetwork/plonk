@@ -7,6 +7,3 @@
 [submodule "jubjub"]
 	path = jubjub
 	url = git@github.com:PlasmNetwork/jubjub.git
-[submodule "subtle"]
-	path = subtle
-	url = git@github.com:PlasmNetwork/subtle.git

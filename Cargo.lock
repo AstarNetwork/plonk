@@ -418,7 +418,7 @@ dependencies = [
  "rand_core 0.6.3",
  "rayon",
  "serde",
- "subtle 2.4.1",
+ "subtle 2.4.1 (git+https://github.com/PlasmNetwork/subtle?rev=4fdd34334e6a91b6c8024401db68116b2b07c64a)",
 ]
 
 [[package]]
@@ -437,7 +437,7 @@ dependencies = [
  "dusk-bls12_381",
  "dusk-bytes",
  "rand_core 0.6.3",
- "subtle 2.4.1",
+ "subtle 2.4.1 (git+https://github.com/PlasmNetwork/subtle?rev=4fdd34334e6a91b6c8024401db68116b2b07c64a)",
 ]
 
 [[package]]
@@ -2040,16 +2040,17 @@ checksum = "2d67a5a62ba6e01cb2192ff309324cb4875d0c451d55fe2319433abe7a05a8ee"
 [[package]]
 name = "subtle"
 version = "2.4.1"
-dependencies = [
- "parity-scale-codec",
- "serde",
-]
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6bdef32e8150c2a081110b42772ffe7d7c9032b606bc226c8260fd97e0976601"
 
 [[package]]
 name = "subtle"
 version = "2.4.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6bdef32e8150c2a081110b42772ffe7d7c9032b606bc226c8260fd97e0976601"
+source = "git+https://github.com/PlasmNetwork/subtle?rev=4fdd34334e6a91b6c8024401db68116b2b07c64a#4fdd34334e6a91b6c8024401db68116b2b07c64a"
+dependencies = [
+ "parity-scale-codec",
+ "serde",
+]
 
 [[package]]
 name = "syn"

@@ -6,7 +6,8 @@ WORKDIR /app
 
 RUN apk add alpine-sdk --update
 
-RUN curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain nightly-2021-11-17
+RUN curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain nightly-2021-11-17 &&\
+    rustup target add wasm32-unknown-unknown --toolchain nightly-2021-11-17
 
 COPY . .
 
