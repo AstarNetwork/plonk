@@ -54,6 +54,7 @@ impl frame_system::Config for TestRuntime {
 }
 
 impl Config for TestRuntime {
+    type CustomCircuit = TestCircuit;
     type Event = Event;
 }
 
@@ -147,7 +148,6 @@ fn plonk() {
 
         assert_ok!(Plonk::verify(
             Origin::signed(1),
-            pp,
             vd,
             proof,
             public_inputs,

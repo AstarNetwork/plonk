@@ -15,6 +15,7 @@ pub mod pallet {
 
     #[pallet::config]
     pub trait Config: frame_system::Config {
+        type CustomCircuit: Circuit;
         type Event: From<Event<Self>> + IsType<<Self as frame_system::Config>::Event>;
     }
 
@@ -50,13 +51,15 @@ pub mod pallet {
         #[pallet::weight(10_000)]
         pub fn verify(
             origin: OriginFor<T>,
-            pp: PublicParameters,
             vd: VerifierData,
             proof: Proof,
             public_inputs: Vec<PublicInputValue>,
-            transcript_init: Vec<u8>,
+            _transcript_init: Vec<u8>,
         ) -> DispatchResultWithPostInfo {
             let _ = ensure_signed(origin)?;
+            let pp = Self::public_parameter().unwrap();
+            T::CustomCircuit::verify(&pp, &vd, &proof, &public_inputs, b"Test")
+                .expect("verify process is in valid");
             Ok(().into())
         }
     }
