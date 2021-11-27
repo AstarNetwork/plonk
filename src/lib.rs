@@ -1,6 +1,7 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 #![allow(clippy::unused_unit)]
 
+use dusk_plonk::prelude::PublicParameters;
 pub use pallet::*;
 use parity_scale_codec::{Decode, Encode};
 
@@ -9,8 +10,8 @@ mod tests;
 
 #[frame_support::pallet]
 pub mod pallet {
-    use super::Transcript;
-    use dusk_plonk::prelude::*;
+    use super::{PublicParameters, Transcript};
+    use dusk_plonk::prelude::{Circuit, Proof, PublicInputValue, VerifierData};
     use frame_support::dispatch::{DispatchErrorWithPostInfo, PostDispatchInfo};
     use frame_support::pallet_prelude::*;
     use frame_system::pallet_prelude::*;
@@ -98,7 +99,11 @@ pub mod pallet {
     }
 }
 
-impl<T: Config> Pallet<T> {}
+impl<T: Config> Pallet<T> {
+    pub fn get_public_parameters() -> Option<PublicParameters> {
+        PublicParameter::<T>::get()
+    }
+}
 
 #[derive(Debug, PartialEq, Clone, Encode)]
 pub struct Transcript(pub &'static [u8]);
