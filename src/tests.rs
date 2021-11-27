@@ -1,4 +1,4 @@
-use crate::{self as plonk, Config};
+use crate::{self as plonk, Config, Transcript};
 
 use dusk_jubjub;
 use dusk_plonk::prelude::*;
@@ -151,7 +151,7 @@ fn plonk() {
             vd,
             proof,
             public_inputs,
-            b"Test".to_vec()
+            Transcript(b"Test")
         ));
     });
 }

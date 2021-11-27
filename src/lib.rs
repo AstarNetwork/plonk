@@ -2,12 +2,14 @@
 #![allow(clippy::unused_unit)]
 
 pub use pallet::*;
+use parity_scale_codec::{Decode, Encode};
 
 #[cfg(test)]
 mod tests;
 
 #[frame_support::pallet]
 pub mod pallet {
+    use super::Transcript;
     use dusk_plonk::prelude::*;
     use frame_support::dispatch::{DispatchErrorWithPostInfo, PostDispatchInfo};
     use frame_support::pallet_prelude::*;
@@ -46,7 +48,7 @@ pub mod pallet {
                 Some(_) => {
                     return Err(DispatchErrorWithPostInfo {
                         post_info: PostDispatchInfo::from(()),
-                        error: DispatchError::Other("Already setup"),
+                        error: DispatchError::Other("already setup"),
                     })
                 }
                 None => {
@@ -64,19 +66,19 @@ pub mod pallet {
             vd: VerifierData,
             proof: Proof,
             public_inputs: Vec<PublicInputValue>,
-            _transcript_init: Vec<u8>,
+            transcript_init: Transcript,
         ) -> DispatchResultWithPostInfo {
             let _ = ensure_signed(origin)?;
             match Self::public_parameter() {
                 Some(pp) => {
-                    T::CustomCircuit::verify(&pp, &vd, &proof, &public_inputs, b"Test")
+                    T::CustomCircuit::verify(&pp, &vd, &proof, &public_inputs, transcript_init.0)
                         .expect("verify process is in valid");
                     Ok(().into())
                 }
                 None => {
                     return Err(DispatchErrorWithPostInfo {
                         post_info: PostDispatchInfo::from(()),
-                        error: DispatchError::Other("Setup not yet"),
+                        error: DispatchError::Other("setup not yet"),
                     })
                 }
             }
@@ -85,3 +87,15 @@ pub mod pallet {
 }
 
 impl<T: Config> Pallet<T> {}
+
+#[derive(Debug, PartialEq, Clone, Encode)]
+pub struct Transcript(&'static [u8]);
+
+#[allow(unconditional_recursion)]
+impl Decode for Transcript {
+    fn decode<I: parity_scale_codec::Input>(
+        input: &mut I,
+    ) -> Result<Self, parity_scale_codec::Error> {
+        Decode::decode(input)
+    }
+}
