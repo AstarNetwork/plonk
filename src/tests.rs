@@ -2,11 +2,13 @@ use crate::{self as plonk, Config, Transcript};
 
 use dusk_jubjub;
 use dusk_plonk::prelude::*;
+use frame_support::dispatch::{DispatchErrorWithPostInfo, PostDispatchInfo};
 use frame_support::{assert_ok, construct_runtime, parameter_types};
 use sp_core::H256;
 use sp_runtime::{
     testing::Header,
     traits::{BlakeTwo256, IdentityLookup},
+    DispatchError,
 };
 
 type UncheckedExtrinsic = frame_system::mocking::MockUncheckedExtrinsic<TestRuntime>;
@@ -115,6 +117,20 @@ impl Circuit for TestCircuit {
     fn padded_gates(&self) -> usize {
         1 << 11
     }
+}
+
+#[test]
+fn trusted_setup() {
+    new_test_ext().execute_with(|| {
+        assert_ok!(Plonk::trusted_setup(Origin::signed(1), 12));
+        assert_eq!(
+            Plonk::trusted_setup(Origin::signed(1), 12),
+            Err(DispatchErrorWithPostInfo {
+                post_info: PostDispatchInfo::from(()),
+                error: DispatchError::Other("already setup"),
+            })
+        );
+    })
 }
 
 #[test]
