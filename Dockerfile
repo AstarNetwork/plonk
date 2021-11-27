@@ -10,4 +10,7 @@ RUN curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain nightly-202
 
 COPY . .
 
-RUN cargo build
+RUN git submodule update --init --recursive &&\
+    cargo test --no-run
+
+CMD cargo test

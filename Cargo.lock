@@ -1148,23 +1148,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "624a8340c38c1b80fd549087862da4ba43e08858af025b236e509b6649fc13d5"
 
 [[package]]
-name = "pallet-plonk"
-version = "0.0.1"
-dependencies = [
- "dusk-jubjub",
- "dusk-plonk",
- "frame-support",
- "frame-system",
- "parity-scale-codec",
- "rand_core 0.6.3",
- "serde",
- "sp-core",
- "sp-io",
- "sp-runtime",
- "sp-std",
-]
-
-[[package]]
 name = "parity-scale-codec"
 version = "2.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1291,6 +1274,23 @@ name = "pin-utils"
 version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8b870d8c151b6f2fb93e84a13146138f05d02ed11c7e7c54f8826aaaf7c9f184"
+
+[[package]]
+name = "plonk-pallet"
+version = "0.0.1"
+dependencies = [
+ "dusk-jubjub",
+ "dusk-plonk",
+ "frame-support",
+ "frame-system",
+ "parity-scale-codec",
+ "rand_core 0.6.3",
+ "serde",
+ "sp-core",
+ "sp-io",
+ "sp-runtime",
+ "sp-std",
+]
 
 [[package]]
 name = "ppv-lite86"

@@ -14,8 +14,4 @@ jobs:
         with:
           toolchain: nightly
       - name: Prepare
-        run : git submodule update --init --recursive
-      - name: Check
-        run: cargo check
-      - name: Test
-        run: cargo test
+        run : docker-compose up
