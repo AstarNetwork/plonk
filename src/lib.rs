@@ -101,7 +101,7 @@ pub mod pallet {
 impl<T: Config> Pallet<T> {}
 
 #[derive(Debug, PartialEq, Clone, Encode)]
-pub struct Transcript(&'static [u8]);
+pub struct Transcript(pub &'static [u8]);
 
 #[allow(unconditional_recursion)]
 impl Decode for Transcript {
