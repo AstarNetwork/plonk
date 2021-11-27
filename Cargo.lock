@@ -434,6 +434,7 @@ dependencies = [
 [[package]]
 name = "dusk-jubjub"
 version = "0.10.1"
+source = "git+https://github.com/PlasmNetwork/jubjub?rev=1c24aa0cb4f7288c830cdbeb3c6bdd5456c9852a#1c24aa0cb4f7288c830cdbeb3c6bdd5456c9852a"
 dependencies = [
  "dusk-bls12_381",
  "dusk-bytes",

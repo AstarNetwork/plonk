@@ -12,7 +12,7 @@ version = '0.0.1'
 [dependencies]
 # dusk plonk
 dusk-plonk = { path = "./dusk-plonk" }
-dusk-jubjub = { path = "./jubjub" }
+dusk-jubjub = { git = "https://github.com/PlasmNetwork/jubjub", rev = "1c24aa0cb4f7288c830cdbeb3c6bdd5456c9852a" }
 rand_core = {version="0.6", default-features=false}
 # substrate pallet
 parity-scale-codec = { version = "2.0", default-features = false, features = ["derive"] }
