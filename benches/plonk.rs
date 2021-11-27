@@ -1,8 +1,8 @@
 use criterion::{criterion_group, criterion_main, Criterion};
 
-use plonk_pallet as plonk;
 use dusk_jubjub;
 use dusk_plonk::prelude::*;
+use plonk_pallet as plonk;
 use plonk_pallet::{Config, Transcript};
 
 use frame_support::{construct_runtime, parameter_types};
@@ -150,14 +150,15 @@ fn plonk_benchmark(name: String, k: u32, c: &mut Criterion) {
 
         c.bench_function(name.as_str(), |b| {
             b.iter(|| {
-            Plonk::verify(
-                Origin::signed(1),
-                vd.clone(),
-                proof.clone(),
-                public_inputs.clone(),
-                Transcript(b"Test")
-            ).unwrap();
-        })
+                Plonk::verify(
+                    Origin::signed(1),
+                    vd.clone(),
+                    proof.clone(),
+                    public_inputs.clone(),
+                    Transcript(b"Test"),
+                )
+                .unwrap();
+            })
         })
     });
 }
@@ -169,5 +170,5 @@ fn plonk_benchmarks(c: &mut Criterion) {
     }
 }
 
-criterion_group! (benches, plonk_benchmarks);
+criterion_group!(benches, plonk_benchmarks);
 criterion_main!(benches);
