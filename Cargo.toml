@@ -7,23 +7,23 @@ license = 'Unlicense'
 name = 'plonk-pallet'
 readme = 'README.md'
 repository = 'https://github.com/PlasmNetwork/plonk/'
-version = '0.0.1'
+version = '0.1.0'
 
 [dependencies]
 # dusk plonk
-dusk-plonk = { git = "https://github.com/PlasmNetwork/dusk-plonk", rev = "0e9d99425cccbc75a6b586bca5b10e2e35bc85c0" }
-dusk-jubjub = { git = "https://github.com/PlasmNetwork/jubjub", rev = "1c24aa0cb4f7288c830cdbeb3c6bdd5456c9852a" }
+dusk-plonk = {version = "0.1", package="parity-plonk"}
+dusk-jubjub = {version = "0.1", default-features = false, package="plonk-jubjub"}
 rand_core = {version="0.6", default-features=false}
 # substrate pallet
-parity-scale-codec = { version = "2.0", default-features = false, features = ["derive"] }
 frame-support = { version = '3.0', default-features = false}
 frame-system = { version = '3.0', default-features = false}
 sp-runtime = { version = '3.0', default-features = false}
 sp-std = { version = '3.0', default-features = false}
-serde = { versions = "1.0.130", features = ["derive"] }
+# parity codec
+parity-scale-codec = { version = "2.0", default-features = false, features = ["derive"] }
+serde = {version = "1.0", features = ["derive"]}
 
 [dev-dependencies]
-serde = '1.0'
 sp-core = '3.0'
 sp-io = '3.0'
 criterion = "0.3"

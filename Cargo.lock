@@ -428,7 +428,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b584a330336237c1eecd3e94266efb216c56ed91225d634cb2991c5f3fd1aeab"
 dependencies = [
  "generic-array 0.14.4",
- "subtle 2.4.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "subtle 2.4.1",
 ]
 
 [[package]]
@@ -438,7 +438,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b1d1a86f49236c215f271d40892d5fc950490551400b02ef360692c29815c714"
 dependencies = [
  "generic-array 0.14.4",
- "subtle 2.4.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "subtle 2.4.1",
 ]
 
 [[package]]
@@ -472,7 +472,7 @@ dependencies = [
  "byteorder",
  "digest 0.8.1",
  "rand_core 0.5.1",
- "subtle 2.4.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "subtle 2.4.1",
  "zeroize",
 ]
 
@@ -485,7 +485,7 @@ dependencies = [
  "byteorder",
  "digest 0.9.0",
  "rand_core 0.5.1",
- "subtle 2.4.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "subtle 2.4.1",
  "zeroize",
 ]
 
@@ -532,55 +532,12 @@ dependencies = [
 ]
 
 [[package]]
-name = "dusk-bls12_381"
-version = "0.8.0"
-source = "git+https://github.com/PlasmNetwork/bls12_381?rev=177a0911b050316984197d2f2bea9f0c9799e214#177a0911b050316984197d2f2bea9f0c9799e214"
-dependencies = [
- "byteorder",
- "dusk-bytes",
- "parity-scale-codec",
- "rand_core 0.6.3",
- "rayon",
- "serde",
- "subtle 2.4.1 (git+https://github.com/PlasmNetwork/subtle?rev=4fdd34334e6a91b6c8024401db68116b2b07c64a)",
-]
-
-[[package]]
 name = "dusk-bytes"
 version = "0.1.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4422ec33d6a528cc35d889a75f79e58101a9bc73522f34bb3405a36bedc90f8a"
 dependencies = [
  "derive-hex",
-]
-
-[[package]]
-name = "dusk-jubjub"
-version = "0.10.1"
-source = "git+https://github.com/PlasmNetwork/jubjub?rev=1c24aa0cb4f7288c830cdbeb3c6bdd5456c9852a#1c24aa0cb4f7288c830cdbeb3c6bdd5456c9852a"
-dependencies = [
- "dusk-bls12_381",
- "dusk-bytes",
- "rand_core 0.6.3",
- "subtle 2.4.1 (git+https://github.com/PlasmNetwork/subtle?rev=4fdd34334e6a91b6c8024401db68116b2b07c64a)",
-]
-
-[[package]]
-name = "dusk-plonk"
-version = "0.9.0"
-source = "git+https://github.com/PlasmNetwork/dusk-plonk?rev=0e9d99425cccbc75a6b586bca5b10e2e35bc85c0#0e9d99425cccbc75a6b586bca5b10e2e35bc85c0"
-dependencies = [
- "cfg-if",
- "dusk-bls12_381",
- "dusk-bytes",
- "dusk-jubjub",
- "hashbrown 0.9.1",
- "itertools 0.9.0",
- "merlin 3.0.0",
- "parity-scale-codec",
- "rand_core 0.6.3",
- "rayon",
- "serde",
 ]
 
 [[package]]
@@ -1106,7 +1063,7 @@ dependencies = [
  "hmac-drbg",
  "rand 0.7.3",
  "sha2 0.8.2",
- "subtle 2.4.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "subtle 2.4.1",
  "typenum",
 ]
 
@@ -1295,6 +1252,25 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "624a8340c38c1b80fd549087862da4ba43e08858af025b236e509b6649fc13d5"
 
 [[package]]
+name = "parity-plonk"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a84b6a8c0780c79958ea2be3cc8c7024ee6a88bd0766ea00813276f5bf0b82cb"
+dependencies = [
+ "cfg-if",
+ "dusk-bytes",
+ "hashbrown 0.9.1",
+ "itertools 0.9.0",
+ "merlin 3.0.0",
+ "parity-scale-codec",
+ "plonk-bls12_381",
+ "plonk-jubjub",
+ "rand_core 0.6.3",
+ "rayon",
+ "serde",
+]
+
+[[package]]
 name = "parity-scale-codec"
 version = "2.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1318,6 +1294,16 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn",
+]
+
+[[package]]
+name = "parity-subtle"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "045738e881b4bf1e3fdcd12a951accdb9c8aff391b77ab6c5c2b02a270ce648f"
+dependencies = [
+ "parity-scale-codec",
+ "serde",
 ]
 
 [[package]]
@@ -1423,16 +1409,43 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8b870d8c151b6f2fb93e84a13146138f05d02ed11c7e7c54f8826aaaf7c9f184"
 
 [[package]]
+name = "plonk-bls12_381"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a45a195c5a40d827b754a232cb43eabdc0ef9b6e752136a0041cb6482f07cee2"
+dependencies = [
+ "byteorder",
+ "dusk-bytes",
+ "parity-scale-codec",
+ "parity-subtle",
+ "rand_core 0.6.3",
+ "rayon",
+ "serde",
+]
+
+[[package]]
+name = "plonk-jubjub"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0e31bd7ffbaaff2e87d213a116884bba623bf90e95d4ad0de2c12db19e927b38"
+dependencies = [
+ "dusk-bytes",
+ "parity-subtle",
+ "plonk-bls12_381",
+ "rand_core 0.6.3",
+]
+
+[[package]]
 name = "plonk-pallet"
-version = "0.0.1"
+version = "0.1.0"
 dependencies = [
  "ark-std",
  "criterion",
- "dusk-jubjub",
- "dusk-plonk",
  "frame-support",
  "frame-system",
+ "parity-plonk",
  "parity-scale-codec",
+ "plonk-jubjub",
  "rand_core 0.6.3",
  "serde",
  "sp-core",
@@ -1767,7 +1780,7 @@ dependencies = [
  "rand_core 0.5.1",
  "serde",
  "sha2 0.8.2",
- "subtle 2.4.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "subtle 2.4.1",
  "zeroize",
 ]
 
@@ -2253,15 +2266,6 @@ name = "subtle"
 version = "2.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6bdef32e8150c2a081110b42772ffe7d7c9032b606bc226c8260fd97e0976601"
-
-[[package]]
-name = "subtle"
-version = "2.4.1"
-source = "git+https://github.com/PlasmNetwork/subtle?rev=4fdd34334e6a91b6c8024401db68116b2b07c64a#4fdd34334e6a91b6c8024401db68116b2b07c64a"
-dependencies = [
- "parity-scale-codec",
- "serde",
-]
 
 [[package]]
 name = "syn"
