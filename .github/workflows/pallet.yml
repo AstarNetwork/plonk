@@ -59,3 +59,14 @@ jobs:
         with:
           command: fmt
           args: --all -- --check
+
+  docker:
+    name: Docker Image
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: docker-compose build
+        run: docker-compose build
+      - name: docker-compose test
+        run: EXEC_CMD=test docker-compose up
