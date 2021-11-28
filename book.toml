@@ -1,7 +1,7 @@
 [book]
 authors = ['NoCtrlZ<shinsaku.ashizawa@artree.co.jp>']
 multilingual = false
-src = "src"
+src = "book"
 title = "Plonk Pallet Documentation"
 
 [build]
