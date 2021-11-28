@@ -1,0 +1,16 @@
+[package]
+name = "runtime-api"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+sp-api = { version = '3.0', default-features = false}
+dusk-plonk = {version = "0.1", package="parity-plonk"}
+
+[features]
+default = ["std"]
+std = [
+	"sp-api/std",
+]
