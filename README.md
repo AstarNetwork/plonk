@@ -6,9 +6,10 @@ This is `plonk` pallet implemented as an extension of [duck-network plonk](https
 
 We'd like to implement the plonk library as a pallet in order for developers to customize circuits and use the plonk protocol.
 
-The following functions are the libraries we are going to implement as pallet.
+The following functions are the libraries we are going to implement as pallet and client.
 
-- Custom Circuit
+- Custom circuit builder
+- Trusted setup
 - Generate proof
 - Verify proof
 
