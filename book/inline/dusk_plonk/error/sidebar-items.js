@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["Error","Defines all possible errors that can be encountered in PLONK."]]});
