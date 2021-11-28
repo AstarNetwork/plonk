@@ -14,4 +14,10 @@ The following functions are the libraries we are going to implement as pallet.
 
 ## Documentation
 
-[Here](https://plasmnetwork.github.io/plonk/)
+We have two documentations.
+
+- [Tutorial](https://plasmnetwork.github.io/plonk/)  
+How to implement the custom circuit on the `Substrate` with `plonk-pallet`.
+
+- [Rust Doc](https://plasmnetwork.github.io/plonk/inline/plonk_pallet/)  
+The description for crate contents.
