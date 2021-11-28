@@ -19,6 +19,7 @@ sp-blockchain = { version = '3.0', default-features = false}
 sp-rpc = { version = '3.0', default-features = false}
 sp-runtime = { version = '3.0', default-features = false}
 plonk-runtime-api = { version = "0.1.0", path = "../runtime-api", default-features = false }
+dusk-plonk = {version = "0.1", package="parity-plonk"}
 
 [features]
 default = ["std"]
