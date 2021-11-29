@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["ElgamalCipher","Tuple for assymetric encryption using ElGamal algorithm."]]});

@@ -1,1 +1,0 @@
-initSidebarItems({"mod":[["design","Design of BLS12-381"],["serialization","BLS12-381 serialization"]]});

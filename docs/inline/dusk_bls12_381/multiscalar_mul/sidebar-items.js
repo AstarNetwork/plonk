@@ -1,1 +1,0 @@
-initSidebarItems({"fn":[["msm_variable_base","Performs a Variable Base Multiscalar Multiplication."],["pippenger","Performs multiscalar multiplication reliying on Pippenger’s algorithm. This method was taken from `curve25519-dalek` and was originally made by Oleg Andreev oleganza@gmail.com."]]});

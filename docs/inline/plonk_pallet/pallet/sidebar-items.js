@@ -1,1 +1,0 @@
-initSidebarItems({"enum":[["Call",""],["Event",""]],"struct":[["Pallet",""],["_GeneratedPrefixForStoragePublicParameter",""]],"trait":[["Config",""]],"type":[["Module","Type alias to `Pallet`, to be used by `construct_runtime`."],["PublicParameter","The setup parameter referred to as SRS"]]});

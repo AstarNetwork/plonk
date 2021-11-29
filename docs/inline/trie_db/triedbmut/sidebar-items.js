@@ -1,1 +1,0 @@
-initSidebarItems({"enum":[["ChildReference","Used to build a collection of child nodes from a collection of `NodeHandle`s"]],"struct":[["TrieDBMut","A `Trie` implementation using a generic `HashDB` backing database."]]});
