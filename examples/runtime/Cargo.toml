@@ -19,7 +19,7 @@ hex-literal = { optional = true, version = '0.3.1' }
 serde = { version = "1.0.125", optional = true, features = ["derive"] }
 
 # Substrate dependencies
-# plonk-pallet = { default-features = false, version = '0.1.3' }
+plonk-pallet = { default-features = false, version = '0.1.3' }
 frame-benchmarking = { default-features = false, optional = true, version = '3.0.0' }
 frame-executive = { default-features = false, version = '3.0.0' }
 frame-support = { default-features = false, version = '3.0.0' }
@@ -65,7 +65,7 @@ std = [
     'frame-support/std',
     'frame-system-rpc-runtime-api/std',
     'frame-system/std',
-#    'plonk-pallet/std',
+    'plonk-pallet/std',
     'pallet-aura/std',
     'pallet-balances/std',
     'pallet-grandpa/std',
