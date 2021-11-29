@@ -27,6 +27,11 @@ impl<C, M> Plonk<C, M> {
     }
 }
 
+#[derive(Debug)]
+pub enum Error {
+    SetupNotYetError,
+}
+
 impl<C, Block> PlonkApi<<Block as BlockT>::Hash> for Plonk<C, Block>
 where
     Block: BlockT,
@@ -44,11 +49,20 @@ where
 
         let runtime_api_result = api.get_public_parameters(&at);
         match runtime_api_result {
-            Ok(i) => return Ok(i.unwrap()),
+            Ok(r) => match r {
+                Some(p) => return Ok(p),
+                None => {
+                    return Err(RpcError {
+                        code: ErrorCode::ServerError(9875),
+                        message: "setup not yet error".into(),
+                        data: Some(format!("{:?}", Error::SetupNotYetError).into()),
+                    })
+                }
+            },
             Err(e) => {
                 return Err(RpcError {
                     code: ErrorCode::ServerError(9876),
-                    message: "Something wrong".into(),
+                    message: "server error".into(),
                     data: Some(format!("{:?}", e).into()),
                 })
             }
