@@ -50,7 +50,9 @@ mod tests;
 
 #[frame_support::pallet]
 pub mod pallet {
-    use super::{Circuit, Proof, PublicInputValue, PublicParameters, Transcript, VerifierData, Vec};
+    use super::{
+        Circuit, Proof, PublicInputValue, PublicParameters, Transcript, Vec, VerifierData,
+    };
     use frame_support::dispatch::{DispatchErrorWithPostInfo, PostDispatchInfo};
     use frame_support::pallet_prelude::*;
     use frame_system::pallet_prelude::*;
