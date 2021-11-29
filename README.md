@@ -1,5 +1,5 @@
 # Plonk For Substrate
- [![GitHub license](https://img.shields.io/badge/license-GPL3%2FApache2-blue)](#LICENSE) [![crates.io badge](https://img.shields.io/crates/v/plonk-pallet.svg)](https://crates.io/crates/pallet-plonk) [![Pallet Test](https://github.com/PlasmNetwork/plonk/actions/workflows/pallet.yml/badge.svg)](https://github.com/PlasmNetwork/plonk/actions/workflows/pallet.yml)  
+ [![GitHub license](https://img.shields.io/badge/license-GPL3%2FApache2-blue)](#LICENSE) [![crates.io badge](https://img.shields.io/crates/v/plonk-pallet.svg)](https://crates.io/crates/plonk-pallet) [![Pallet Test](https://github.com/PlasmNetwork/plonk/actions/workflows/pallet.yml/badge.svg)](https://github.com/PlasmNetwork/plonk/actions/workflows/pallet.yml)  
 This is `plonk` pallet implemented as an extension of [duck-network plonk](https://github.com/dusk-network/plonk).
 
 ## Abstract
@@ -20,5 +20,5 @@ We have two documentations.
 - [Tutorial](https://plasmnetwork.github.io/plonk/)  
 How to implement the custom circuit on the `Substrate` with `plonk-pallet`.
 
-- [Rust Doc](https://plasmnetwork.github.io/plonk/inline/plonk_pallet/)  
+- [Rust Doc](https://docs.rs/plonk-pallet/latest/plonk_pallet/)  
 The description for crate contents.

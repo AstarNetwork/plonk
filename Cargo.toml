@@ -7,7 +7,7 @@ license = "Apache-2.0"
 name = 'plonk-pallet'
 readme = 'README.md'
 repository = 'https://github.com/PlasmNetwork/plonk/'
-version = '0.1.0'
+version = '0.1.2'
 
 [dependencies]
 # dusk plonk
