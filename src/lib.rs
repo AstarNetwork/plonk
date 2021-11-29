@@ -43,18 +43,18 @@ use frame_support::pallet_prelude::*;
 use frame_system::pallet_prelude::*;
 pub use pallet::*;
 use parity_scale_codec::{Decode, Encode};
+use sp_std::vec::Vec;
 
 #[cfg(test)]
 mod tests;
 
 #[frame_support::pallet]
 pub mod pallet {
-    use super::{Circuit, Proof, PublicInputValue, PublicParameters, Transcript, VerifierData};
+    use super::{Circuit, Proof, PublicInputValue, PublicParameters, Transcript, VerifierData, Vec};
     use frame_support::dispatch::{DispatchErrorWithPostInfo, PostDispatchInfo};
     use frame_support::pallet_prelude::*;
     use frame_system::pallet_prelude::*;
     use rand_core::OsRng;
-    use sp_std::vec::Vec;
 
     #[pallet::config]
     pub trait Config: frame_system::Config {
