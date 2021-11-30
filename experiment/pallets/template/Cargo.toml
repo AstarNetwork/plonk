@@ -18,6 +18,8 @@ frame-system = { default-features = false, version = '3.0.0' }
 frame-support = { default-features = false, version = '3.0.0' }
 frame-benchmarking = { default-features = false, optional = true, version = '3.1.0' }
 sp-std = { default-features = false, version = '3.0.0' }
+dusk-plonk = { path = "./dusk-plonk", version = "0.1", package="parity-plonk", default-features = false }
+getrandom = { version = "0.2", features = ["js"] }
 
 [dev-dependencies]
 serde = { version = "1.0.119" }
