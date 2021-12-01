@@ -1021,6 +1021,33 @@ dependencies = [
 
 [[package]]
 name = "criterion"
+version = "0.2.11"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0363053954f3e679645fc443321ca128b7b950a6fe288cf5f9335cc22ee58394"
+dependencies = [
+ "atty",
+ "cast",
+ "clap",
+ "criterion-plot 0.3.1",
+ "csv",
+ "itertools 0.8.2",
+ "lazy_static",
+ "libc",
+ "num-traits",
+ "rand_core 0.3.1",
+ "rand_os",
+ "rand_xoshiro",
+ "rayon",
+ "rayon-core",
+ "serde",
+ "serde_derive",
+ "serde_json",
+ "tinytemplate",
+ "walkdir",
+]
+
+[[package]]
+name = "criterion"
 version = "0.3.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1604dafd25fba2fe2d5895a9da139f8dc9b319a5fe5354ca137cbbce4e178d10"
@@ -1028,7 +1055,7 @@ dependencies = [
  "atty",
  "cast",
  "clap",
- "criterion-plot",
+ "criterion-plot 0.4.4",
  "csv",
  "itertools 0.10.1",
  "lazy_static",
@@ -1043,6 +1070,17 @@ dependencies = [
  "serde_json",
  "tinytemplate",
  "walkdir",
+]
+
+[[package]]
+name = "criterion-plot"
+version = "0.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "76f9212ddf2f4a9eb2d401635190600656a1f88a932ef53d06e7fa4c7e02fb8e"
+dependencies = [
+ "byteorder",
+ "cast",
+ "itertools 0.8.2",
 ]
 
 [[package]]
@@ -2574,6 +2612,15 @@ name = "ipnet"
 version = "2.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "47be2f14c678be2fdcab04ab1171db51b2762ce6f0a8ee87c8dd4a04ed216135"
+
+[[package]]
+name = "itertools"
+version = "0.8.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f56a2d0bc861f9165be4eb3442afd3c236d8a98afd426f65d92324ae1091a484"
+dependencies = [
+ "either",
+]
 
 [[package]]
 name = "itertools"
@@ -4154,7 +4201,7 @@ dependencies = [
  "canonical",
  "canonical_derive",
  "cfg-if 1.0.0",
- "criterion",
+ "criterion 0.3.5",
  "dusk-bytes",
  "getrandom 0.2.2",
  "hashbrown",
@@ -4564,32 +4611,34 @@ checksum = "989d43012e2ca1c4a02507c67282691a0a3207f9dc67cec596b43fe925b3d325"
 [[package]]
 name = "plonk-bls12_381"
 version = "0.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a45a195c5a40d827b754a232cb43eabdc0ef9b6e752136a0041cb6482f07cee2"
 dependencies = [
+ "bincode",
  "byteorder",
  "canonical",
  "canonical_derive",
+ "criterion 0.2.11",
  "dusk-bytes",
+ "getrandom 0.2.2",
  "parity-scale-codec",
  "parity-subtle",
  "rand_core 0.6.2",
  "rayon",
  "serde",
+ "sp-std",
 ]
 
 [[package]]
 name = "plonk-jubjub"
 version = "0.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0e31bd7ffbaaff2e87d213a116884bba623bf90e95d4ad0de2c12db19e927b38"
 dependencies = [
+ "blake2",
  "canonical",
  "canonical_derive",
  "dusk-bytes",
  "parity-subtle",
  "plonk-bls12_381",
  "rand_core 0.6.2",
+ "rand_xorshift",
 ]
 
 [[package]]
@@ -4979,12 +5028,45 @@ dependencies = [
 ]
 
 [[package]]
+name = "rand_os"
+version = "0.1.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7b75f676a1e053fc562eafbb47838d67c84801e38fc1ba459e8f180deabd5071"
+dependencies = [
+ "cloudabi",
+ "fuchsia-cprng",
+ "libc",
+ "rand_core 0.4.2",
+ "rdrand",
+ "winapi 0.3.9",
+]
+
+[[package]]
 name = "rand_pcg"
 version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "16abd0c1b639e9eb4d7c50c0b8100b0d0f849be2349829c740fe8e6eb4816429"
 dependencies = [
  "rand_core 0.5.1",
+]
+
+[[package]]
+name = "rand_xorshift"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d25bf25ec5ae4a3f1b92f929810509a2f53d7dca2f50b794ff57e3face536c8f"
+dependencies = [
+ "rand_core 0.6.2",
+]
+
+[[package]]
+name = "rand_xoshiro"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "03b418169fb9c46533f326efd6eed2576699c44ca92d3052a066214a8d828929"
+dependencies = [
+ "byteorder",
+ "rand_core 0.3.1",
 ]
 
 [[package]]
