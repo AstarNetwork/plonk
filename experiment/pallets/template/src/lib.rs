@@ -48,15 +48,15 @@ mod tests;
 #[cfg(feature = "runtime-benchmarks")]
 mod benchmarking;
 
-use dusk_plonk::prelude::{Circuit, Proof, PublicInputValue, PublicParameters, VerifierData};
+// use dusk_plonk::prelude::{Circuit, Proof, PublicInputValue, PublicParameters, VerifierData};
 use sp_std::vec::Vec;
 use sp_std::vec;
 
 #[frame_support::pallet]
 pub mod pallet {
-	use super::{
-        Circuit, Proof, PublicInputValue, PublicParameters, Vec, VerifierData,
-    };
+	// use super::{
+    //     Circuit, Proof, PublicInputValue, PublicParameters, Vec, VerifierData,
+    // };
 	use frame_support::{dispatch::DispatchResultWithPostInfo, pallet_prelude::*};
 	use frame_system::pallet_prelude::*;
 
@@ -69,10 +69,10 @@ pub mod pallet {
 	#[pallet::generate_store(pub(super) trait Store)]
 	pub struct Pallet<T>(_);
 
-    #[pallet::storage]
-    #[pallet::getter(fn public_parameter)]
+    // #[pallet::storage]
+    // #[pallet::getter(fn public_parameter)]
     /// The setup parameter referred to as SRS
-    pub type PublicParameter<T: Config> = StorageValue<_, PublicParameters>;
+    // pub type PublicParameter<T: Config> = StorageValue<_, PublicParameters>;
 
 	#[pallet::event]
 	#[pallet::metadata(T::AccountId = "AccountId")]
