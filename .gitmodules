@@ -1,0 +1,3 @@
+[submodule "experiment/pallets/template/dusk-plonk"]
+	path = experiment/pallets/template/dusk-plonk
+	url = git@github.com:PlasmNetwork/dusk-plonk.git

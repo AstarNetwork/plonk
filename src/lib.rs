@@ -43,6 +43,7 @@ use frame_support::pallet_prelude::*;
 use frame_system::pallet_prelude::*;
 pub use pallet::*;
 use parity_scale_codec::{Decode, Encode};
+use sp_std::vec;
 use sp_std::vec::Vec;
 
 #[cfg(test)]

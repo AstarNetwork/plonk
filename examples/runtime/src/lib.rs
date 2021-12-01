@@ -3,7 +3,6 @@
 #![recursion_limit="256"]
 
 // Make the WASM binary available.
-#[cfg(feature = "std")]
 include!(concat!(env!("OUT_DIR"), "/wasm_binary.rs"));
 
 use sp_std::prelude::*;
@@ -20,7 +19,6 @@ use sp_consensus_aura::sr25519::AuthorityId as AuraId;
 use pallet_grandpa::{AuthorityId as GrandpaId, AuthorityList as GrandpaAuthorityList};
 use pallet_grandpa::fg_primitives;
 use sp_version::RuntimeVersion;
-#[cfg(feature = "std")]
 use sp_version::NativeVersion;
 
 // A few exports that help ease life for downstream crates.
@@ -126,7 +124,6 @@ pub const HOURS: BlockNumber = MINUTES * 60;
 pub const DAYS: BlockNumber = HOURS * 24;
 
 /// The version information used to identify this runtime when compiled natively.
-#[cfg(feature = "std")]
 pub fn native_version() -> NativeVersion {
 	NativeVersion {
 		runtime_version: VERSION,
