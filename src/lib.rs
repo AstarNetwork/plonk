@@ -45,7 +45,6 @@ pub use pallet::*;
 use parity_scale_codec::{Decode, Encode};
 use sp_std::vec;
 use sp_std::vec::Vec;
-use sp_std::vec;
 
 #[cfg(test)]
 mod tests;
