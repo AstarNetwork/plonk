@@ -1,5 +1,4 @@
 #![cfg_attr(not(feature = "std"), no_std)]
-
 // Copyright (C) 2020-2021 Artree (JP) LLC.
 // SPDX-License-Identifier: Apache-2.0
 
@@ -48,66 +47,136 @@ mod tests;
 #[cfg(feature = "runtime-benchmarks")]
 mod benchmarking;
 
-// use dusk_plonk::prelude::{Circuit, Proof, PublicInputValue, PublicParameters, VerifierData};
+use dusk_plonk::prelude::{Circuit, Proof, PublicInputValue, PublicParameters, VerifierData};
+use frame_support::pallet_prelude::*;
+use frame_system::pallet_prelude::*;
+use parity_scale_codec::{Decode, Encode};
 use sp_std::vec::Vec;
-use sp_std::vec;
 
 #[frame_support::pallet]
 pub mod pallet {
-	// use super::{
-    //     Circuit, Proof, PublicInputValue, PublicParameters, Vec, VerifierData,
-    // };
-	use frame_support::{dispatch::DispatchResultWithPostInfo, pallet_prelude::*};
-	use frame_system::pallet_prelude::*;
+    use super::{
+        Circuit, Proof, PublicInputValue, PublicParameters, Transcript, Vec, VerifierData,
+    };
+    use frame_support::dispatch::{DispatchErrorWithPostInfo, PostDispatchInfo};
+    use frame_support::pallet_prelude::*;
+    use frame_system::pallet_prelude::*;
+    use rand_core::OsRng;
 
-	#[pallet::config]
-	pub trait Config: frame_system::Config {
-		type Event: From<Event<Self>> + IsType<<Self as frame_system::Config>::Event>;
-	}
+    #[pallet::config]
+    pub trait Config: frame_system::Config {
+        /// The circuit customized by developer.
+        type CustomCircuit: Circuit;
 
-	#[pallet::pallet]
-	#[pallet::generate_store(pub(super) trait Store)]
-	pub struct Pallet<T>(_);
+        /// The overarching event type.
+        type Event: From<Event<Self>> + IsType<<Self as frame_system::Config>::Event>;
+    }
 
-    // #[pallet::storage]
-    // #[pallet::getter(fn public_parameter)]
+    #[pallet::storage]
+    #[pallet::getter(fn public_parameter)]
     /// The setup parameter referred to as SRS
-    // pub type PublicParameter<T: Config> = StorageValue<_, PublicParameters>;
+    pub type PublicParameter<T: Config> = StorageValue<_, PublicParameters>;
 
-	#[pallet::event]
-	#[pallet::metadata(T::AccountId = "AccountId")]
-	#[pallet::generate_deposit(pub(super) fn deposit_event)]
-	pub enum Event<T: Config> {
-		SomethingStored(u32, T::AccountId),
-	}
+    #[pallet::event]
+    #[pallet::metadata(u32 = "Metadata")]
+    pub enum Event<T: Config> {
+        /// The event called when setup parameter
+        TrustedSetup(PublicParameters),
+    }
 
-	#[pallet::error]
-	pub enum Error<T> {
-		/// Error names should be descriptive.
-		NoneValue,
-		/// Errors should have helpful documentation associated with them.
-		StorageOverflow,
-	}
+    #[pallet::pallet]
+    #[pallet::generate_store(pub(super) trait Store)]
+    pub struct Pallet<T>(_);
 
-	#[pallet::hooks]
-	impl<T: Config> Hooks<BlockNumberFor<T>> for Pallet<T> {}
+    #[pallet::hooks]
+    impl<T: Config> Hooks<BlockNumberFor<T>> for Pallet<T> {}
 
-	#[pallet::call]
-	impl<T:Config> Pallet<T> {
-		#[pallet::weight(10_000 + T::DbWeight::get().writes(1))]
-		pub fn do_something(origin: OriginFor<T>, something: u32) -> DispatchResultWithPostInfo {
-			let who = ensure_signed(origin)?;
+    #[pallet::call]
+    impl<T: Config> Pallet<T> {
+        /// The function called when we setup the parameters
+        #[pallet::weight(10_000)]
+        pub fn trusted_setup(origin: OriginFor<T>, val: u32) -> DispatchResultWithPostInfo {
+            let _ = ensure_signed(origin)?;
+            match Self::public_parameter() {
+                Some(_) => {
+                    return Err(DispatchErrorWithPostInfo {
+                        post_info: PostDispatchInfo::from(()),
+                        error: DispatchError::Other("already setup"),
+                    })
+                }
+                None => {
+                    let pp = PublicParameters::setup(1 << val, &mut OsRng).unwrap();
+                    PublicParameter::<T>::put(&pp);
+                    Event::<T>::TrustedSetup(pp);
+                    return Ok(().into());
+                }
+            }
+        }
 
-			Self::deposit_event(Event::SomethingStored(something, who));
-			// Return a successful DispatchResultWithPostInfo
-			Ok(().into())
-		}
+        /// The function called when we verify the statement
+        #[pallet::weight(10_000)]
+        pub fn verify(
+            origin: OriginFor<T>,
+            vd: VerifierData,
+            proof: Proof,
+            public_inputs: Vec<PublicInputValue>,
+            transcript_init: Transcript,
+        ) -> DispatchResultWithPostInfo {
+            let _ = ensure_signed(origin)?;
+            match Self::public_parameter() {
+                Some(pp) => {
+                    match T::CustomCircuit::verify(
+                        &pp,
+                        &vd,
+                        &proof,
+                        &public_inputs,
+                        transcript_init.0,
+                    ) {
+                        Ok(_) => return Ok(().into()),
+                        Err(_) => {
+                            return Err(DispatchErrorWithPostInfo {
+                                post_info: PostDispatchInfo::from(()),
+                                error: DispatchError::Other("invalid proof"),
+                            })
+                        }
+                    }
+                }
+                None => {
+                    return Err(DispatchErrorWithPostInfo {
+                        post_info: PostDispatchInfo::from(()),
+                        error: DispatchError::Other("setup not yet"),
+                    })
+                }
+            }
+        }
+    }
+}
 
-		#[pallet::weight(10_000 + T::DbWeight::get().reads_writes(1,1))]
-		pub fn cause_error(origin: OriginFor<T>) -> DispatchResultWithPostInfo {
-			let _who = ensure_signed(origin)?;
+impl<T: Config> Pallet<T> {
+    pub fn get_public_parameters() -> Option<PublicParameters> {
+        PublicParameter::<T>::get()
+    }
 
-			Ok(().into())
-		}
-	}
+    pub fn verify_proof(
+        origin: OriginFor<T>,
+        vd: VerifierData,
+        proof: Proof,
+        public_inputs: Vec<PublicInputValue>,
+        transcript_init: Transcript,
+    ) -> DispatchResultWithPostInfo {
+        Self::verify(origin, vd, proof, public_inputs, transcript_init)
+    }
+}
+
+/// The struct for Merlin transcript
+#[derive(Debug, PartialEq, Clone, Encode)]
+pub struct Transcript(pub &'static [u8]);
+
+#[allow(unconditional_recursion)]
+impl Decode for Transcript {
+    fn decode<I: parity_scale_codec::Input>(
+        input: &mut I,
+    ) -> Result<Self, parity_scale_codec::Error> {
+        Decode::decode(input)
+    }
 }

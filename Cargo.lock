@@ -1266,7 +1266,6 @@ dependencies = [
  "plonk-bls12_381",
  "plonk-jubjub",
  "rand_core 0.6.3",
- "rayon",
  "serde",
 ]
 

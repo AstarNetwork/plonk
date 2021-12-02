@@ -1,28 +1,37 @@
 [package]
-authors = ['Substrate DevHub <https://github.com/substrate-developer-hub>']
-description = 'FRAME pallet template for defining custom runtime logic.'
+authors = ['NoCtrlZ<shinsaku.ashizawa@artree.co.jp>']
+description = 'zkSNARK plonk pallet'
 edition = '2018'
-homepage = 'https://substrate.dev'
-license = 'Unlicense'
-name = 'pallet-template'
+homepage = 'https://github.com/PlasmNetwork/plonk/'
+license = "Apache-2.0"
+name = 'plonk-pallet'
 readme = 'README.md'
-repository = 'https://github.com/substrate-developer-hub/substrate-node-template/'
-version = '3.0.0'
+repository = 'https://github.com/PlasmNetwork/plonk/'
+version = '0.1.3'
 
 [package.metadata.docs.rs]
 targets = ['x86_64-unknown-linux-gnu']
 
 [dependencies]
-codec = { default-features = false, features = ['derive'], package = 'parity-scale-codec', version = '2.0.0' }
-frame-system = { default-features = false, version = '3.0.0' }
-frame-support = { default-features = false, version = '3.0.0' }
-frame-benchmarking = { default-features = false, optional = true, version = '3.1.0' }
-sp-std = { default-features = false, version = '3.0.0' }
-dusk-plonk = { version = "0.1", default-features = false, package="parity-plonk", path = "./dusk-plonk" }
+# plonk
+dusk-plonk = {version = "0.1", default-features = false, package="parity-plonk", path = "./dusk-plonk"}
+dusk-jubjub = {version = "0.1", default-features = false, package="plonk-jubjub"}
+rand_core = {version="0.6", default-features=false }
 getrandom = { version = "0.2", default-features = false, features = ["js"] }
 
-[dev-dependencies]
+# substrate pallet
+frame-system = { default-features = false, version = '3.0.0' }
+frame-support = { default-features = false, version = '3.0.0' }
+sp-std = { default-features = false, version = '3.0.0' }
+
+# parity codec
 serde = { version = "1.0.125", default-features = false, features = ["derive"] }
+parity-scale-codec = { version = "2.0", default-features = false, features = ["derive"] }
+
+# benchmarking
+frame-benchmarking = { default-features = false, optional = true, version = '3.1.0' }
+
+[dev-dependencies]
 sp-core = { default-features = false, version = '3.0.0' }
 sp-io = { default-features = false, version = '3.0.0' }
 sp-runtime = { default-features = false, version = '3.0.0' }
@@ -30,7 +39,7 @@ sp-runtime = { default-features = false, version = '3.0.0' }
 [features]
 default = ['std']
 std = [
-	'codec/std',
+	'parity-scale-codec/std',
 	'frame-support/std',
 	'frame-system/std',
 	'frame-benchmarking/std',
