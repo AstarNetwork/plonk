@@ -1,9 +1,9 @@
 use crate::{self as plonk, Config, Transcript};
 
-use parity_jubjub;
 use dusk_plonk::prelude::*;
 use frame_support::dispatch::{DispatchErrorWithPostInfo, PostDispatchInfo};
 use frame_support::{assert_ok, construct_runtime, parameter_types};
+use parity_jubjub;
 use sp_core::H256;
 use sp_runtime::{
     testing::Header,

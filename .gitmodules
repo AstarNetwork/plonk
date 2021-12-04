@@ -10,6 +10,6 @@
 [submodule "experiment/pallets/template/rand"]
 	path = experiment/pallets/template/rand
 	url = git@github.com:rust-random/rand.git
-[submodule "experiment/pallets/template/getrandom"]
-	path = experiment/pallets/template/getrandom
-	url = git@github.com:rust-random/getrandom.git
+[submodule "experiment/pallets/template/rngs"]
+	path = experiment/pallets/template/rngs
+	url = git@github.com:rust-random/rngs.git

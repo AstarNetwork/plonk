@@ -1,7 +1,7 @@
 use criterion::{criterion_group, criterion_main, Criterion};
 
-use dusk_jubjub;
-use dusk_plonk::prelude::*;
+use parity_jubjub;
+use parity_plonk::prelude::*;
 use plonk_pallet as plonk;
 use plonk_pallet::{Config, Transcript};
 

@@ -1,6 +1,6 @@
 use crate as pallet_template;
-use dusk_jubjub;
-use dusk_plonk::prelude::*;
+use parity_jubjub;
+use parity_plonk::prelude::*;
 use frame_support::parameter_types;
 use frame_system as system;
 use sp_core::H256;
@@ -91,7 +91,7 @@ impl Circuit for TestCircuit {
 
         let e = composer.append_witness(self.e);
         let scalar_mul_result =
-            composer.component_mul_generator(e, dusk_jubjub::GENERATOR_EXTENDED);
+            composer.component_mul_generator(e, parity_jubjub::GENERATOR_EXTENDED);
         // Apply the constrain
         composer.assert_equal_public_point(scalar_mul_result, self.f);
         Ok(())
