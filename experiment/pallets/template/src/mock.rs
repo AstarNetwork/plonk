@@ -1,4 +1,6 @@
 use crate as pallet_template;
+use dusk_jubjub;
+use dusk_plonk::prelude::*;
 use frame_support::parameter_types;
 use frame_system as system;
 use sp_core::H256;
@@ -52,8 +54,61 @@ impl system::Config for Test {
     type SS58Prefix = SS58Prefix;
 }
 
+#[derive(Debug, Default)]
+pub struct TestCircuit {
+    a: BlsScalar,
+    b: BlsScalar,
+    c: BlsScalar,
+    d: BlsScalar,
+    e: JubJubScalar,
+    f: JubJubAffine,
+}
+
+impl Circuit for TestCircuit {
+    const CIRCUIT_ID: [u8; 32] = [0xff; 32];
+    fn gadget(&mut self, composer: &mut TurboComposer) -> Result<(), Error> {
+        let a = composer.append_witness(self.a);
+        let b = composer.append_witness(self.b);
+
+        // Make first constraint a + b = c
+        let constraint = Constraint::new().left(1).right(1).public(-self.c).a(a).b(b);
+
+        composer.append_gate(constraint);
+
+        // Check that a and b are in range
+        composer.component_range(a, 1 << 6);
+        composer.component_range(b, 1 << 5);
+
+        // Make second constraint a * b = d
+        let constraint = Constraint::new()
+            .mult(1)
+            .output(1)
+            .public(-self.d)
+            .a(a)
+            .b(b);
+
+        composer.append_gate(constraint);
+
+        let e = composer.append_witness(self.e);
+        let scalar_mul_result =
+            composer.component_mul_generator(e, dusk_jubjub::GENERATOR_EXTENDED);
+        // Apply the constrain
+        composer.assert_equal_public_point(scalar_mul_result, self.f);
+        Ok(())
+    }
+
+    fn public_inputs(&self) -> Vec<PublicInputValue> {
+        vec![self.c.into(), self.d.into(), self.f.into()]
+    }
+
+    fn padded_gates(&self) -> usize {
+        1 << 11
+    }
+}
+
 impl pallet_template::Config for Test {
     type Event = Event;
+    type CustomCircuit = TestCircuit;
 }
 
 // Build genesis storage according to the mock runtime.

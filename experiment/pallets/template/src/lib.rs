@@ -61,7 +61,8 @@ pub mod pallet {
     use frame_support::dispatch::{DispatchErrorWithPostInfo, PostDispatchInfo};
     use frame_support::pallet_prelude::*;
     use frame_system::pallet_prelude::*;
-    use rand_core::OsRng;
+    use rand_core::RngCore;
+    use rand_xorshift::XorShiftRng;
 
     #[pallet::config]
     pub trait Config: frame_system::Config {
@@ -84,6 +85,14 @@ pub mod pallet {
         TrustedSetup(PublicParameters),
     }
 
+    #[pallet::error]
+    pub enum Error<T> {
+        /// Error names should be descriptive.
+        NoneValue,
+        /// Errors should have helpful documentation associated with them.
+        StorageOverflow,
+    }
+
     #[pallet::pallet]
     #[pallet::generate_store(pub(super) trait Store)]
     pub struct Pallet<T>(_);
@@ -95,7 +104,11 @@ pub mod pallet {
     impl<T: Config> Pallet<T> {
         /// The function called when we setup the parameters
         #[pallet::weight(10_000)]
-        pub fn trusted_setup(origin: OriginFor<T>, val: u32) -> DispatchResultWithPostInfo {
+        pub fn trusted_setup(
+            origin: OriginFor<T>,
+            val: u32,
+            rng: XorShiftRng,
+        ) -> DispatchResultWithPostInfo {
             let _ = ensure_signed(origin)?;
             match Self::public_parameter() {
                 Some(_) => {
@@ -105,7 +118,7 @@ pub mod pallet {
                     })
                 }
                 None => {
-                    let pp = PublicParameters::setup(1 << val, &mut OsRng).unwrap();
+                    let pp = PublicParameters::setup(1 << val, &mut rng).unwrap();
                     PublicParameter::<T>::put(&pp);
                     Event::<T>::TrustedSetup(pp);
                     return Ok(().into());

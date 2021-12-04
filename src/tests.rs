@@ -1,6 +1,6 @@
 use crate::{self as plonk, Config, Transcript};
 
-use dusk_jubjub;
+use parity_jubjub;
 use dusk_plonk::prelude::*;
 use frame_support::dispatch::{DispatchErrorWithPostInfo, PostDispatchInfo};
 use frame_support::{assert_ok, construct_runtime, parameter_types};
