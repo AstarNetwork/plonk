@@ -4188,11 +4188,11 @@ dependencies = [
  "itertools 0.9.0",
  "merlin 3.0.0",
  "parity-scale-codec",
+ "parity_rand_xorshift",
  "plonk-bls12_381",
  "plonk-jubjub",
  "rand 0.8.3",
  "rand_core 0.6.3",
- "rand_xorshift 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde",
  "sp-std",
  "tempdir",
@@ -4316,6 +4316,17 @@ dependencies = [
  "sha-1 0.8.2",
  "slab",
  "url 2.2.1",
+]
+
+[[package]]
+name = "parity_rand_xorshift"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "225c90113080de5b3623900110326bcdf86f3813c3594ab41bd6769964e64b0d"
+dependencies = [
+ "parity-scale-codec",
+ "rand_core 0.6.3",
+ "sp-std",
 ]
 
 [[package]]
@@ -4616,9 +4627,9 @@ dependencies = [
  "canonical_derive",
  "dusk-bytes",
  "parity-subtle",
+ "parity_rand_xorshift",
  "plonk-bls12_381",
  "rand_core 0.6.3",
- "rand_xorshift 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -4630,10 +4641,10 @@ dependencies = [
  "frame-system",
  "parity-plonk",
  "parity-scale-codec",
+ "parity_rand_xorshift",
  "plonk-jubjub",
  "rand 0.8.3",
  "rand_core 0.6.3",
- "rand_xorshift 0.3.0",
  "serde",
  "sp-core",
  "sp-io",
@@ -5048,26 +5059,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "16abd0c1b639e9eb4d7c50c0b8100b0d0f849be2349829c740fe8e6eb4816429"
 dependencies = [
  "rand_core 0.5.1",
-]
-
-[[package]]
-name = "rand_xorshift"
-version = "0.3.0"
-dependencies = [
- "bincode",
- "parity-scale-codec",
- "rand_core 0.6.3",
- "serde",
- "sp-std",
-]
-
-[[package]]
-name = "rand_xorshift"
-version = "0.3.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d25bf25ec5ae4a3f1b92f929810509a2f53d7dca2f50b794ff57e3face536c8f"
-dependencies = [
- "rand_core 0.6.3",
 ]
 
 [[package]]

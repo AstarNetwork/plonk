@@ -7,6 +7,3 @@
 [submodule "experiment/pallets/template/jubjub"]
 	path = experiment/pallets/template/jubjub
 	url = git@github.com:PlasmNetwork/jubjub.git
-[submodule "experiment/pallets/template/rngs"]
-	path = experiment/pallets/template/rngs
-	url = git@github.com:rust-random/rngs.git

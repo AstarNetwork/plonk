@@ -27,7 +27,7 @@ sp-std = { default-features = false, version = '3.0.0' }
 # parity codec
 serde = { version = "1.0.125", default-features = false, features = ["derive"] }
 parity-scale-codec = { version = "2.0", default-features = false, features = ["derive"] }
-rand_xorshift = {version = "0.3", default-features = false, path = "./rngs/rand_xorshift"}
+rand_xorshift = {version = "0.1", default-features = false, package = "parity_rand_xorshift"}
 rand = {version = "0.8", default-features = false}
 
 
