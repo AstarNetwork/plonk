@@ -61,7 +61,6 @@ pub mod pallet {
     use frame_support::dispatch::{DispatchErrorWithPostInfo, PostDispatchInfo};
     use frame_support::pallet_prelude::*;
     use frame_system::pallet_prelude::*;
-    use rand_core::RngCore;
     use rand_xorshift::XorShiftRng;
 
     #[pallet::config]
@@ -107,7 +106,7 @@ pub mod pallet {
         pub fn trusted_setup(
             origin: OriginFor<T>,
             val: u32,
-            rng: XorShiftRng,
+            mut rng: XorShiftRng,
         ) -> DispatchResultWithPostInfo {
             let _ = ensure_signed(origin)?;
             match Self::public_parameter() {

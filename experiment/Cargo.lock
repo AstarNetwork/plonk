@@ -3791,7 +3791,9 @@ dependencies = [
  "pallet-timestamp",
  "pallet-transaction-payment",
  "pallet-transaction-payment-rpc-runtime-api",
+ "parity-plonk",
  "parity-scale-codec",
+ "plonk-jubjub",
  "plonk-pallet",
  "serde",
  "sp-api",
@@ -4188,9 +4190,9 @@ dependencies = [
  "parity-scale-codec",
  "plonk-bls12_381",
  "plonk-jubjub",
- "rand 0.3.23",
- "rand_core 0.6.3",
- "rand_xorshift",
+ "rand 0.8.3",
+ "rand_core 0.6.4",
+ "rand_xorshift 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde",
  "sp-std",
  "tempdir",
@@ -4600,7 +4602,7 @@ dependencies = [
  "dusk-bytes",
  "parity-scale-codec",
  "parity-subtle",
- "rand_core 0.6.3",
+ "rand_core 0.6.4",
  "serde",
  "sp-std",
 ]
@@ -4616,7 +4618,7 @@ dependencies = [
  "parity-subtle",
  "plonk-bls12_381",
  "rand_core 0.6.3",
- "rand_xorshift",
+ "rand_xorshift 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -4631,7 +4633,7 @@ dependencies = [
  "plonk-jubjub",
  "rand 0.8.3",
  "rand_core 0.6.3",
- "rand_xorshift",
+ "rand_xorshift 0.3.0",
  "serde",
  "sp-core",
  "sp-io",
@@ -4999,6 +5001,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "rand_core"
+version = "0.6.4"
+dependencies = [
+ "getrandom 0.2.3",
+ "serde",
+]
+
+[[package]]
 name = "rand_distr"
 version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5046,6 +5056,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "16abd0c1b639e9eb4d7c50c0b8100b0d0f849be2349829c740fe8e6eb4816429"
 dependencies = [
  "rand_core 0.5.1",
+]
+
+[[package]]
+name = "rand_xorshift"
+version = "0.3.0"
+dependencies = [
+ "bincode",
+ "parity-scale-codec",
+ "rand_core 0.6.4",
+ "serde",
+ "sp-std",
 ]
 
 [[package]]

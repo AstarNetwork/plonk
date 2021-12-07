@@ -47,6 +47,8 @@ sp-version = { default-features = false, version = '3.0.0' }
 
 # local dependencies
 plonk-pallet = { default-features = false, path = '../pallets/template', version = '0.1' }
+dusk-plonk = {version = "0.1", default-features = false, package="parity-plonk", path = "../pallets/template/dusk-plonk"}
+dusk-jubjub = {version = "0.1", default-features = false, package="plonk-jubjub", path = "../pallets/template/jubjub"}
 
 [features]
 default = ['std']

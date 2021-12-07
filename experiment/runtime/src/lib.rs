@@ -41,7 +41,9 @@ pub use sp_runtime::BuildStorage;
 pub use sp_runtime::{Perbill, Permill};
 
 /// Import the template pallet.
-// pub use pallet_template;
+pub use plonk_pallet;
+use dusk_jubjub;
+use dusk_plonk::prelude::*;
 
 /// An index to a block.
 pub type BlockNumber = u32;
@@ -109,6 +111,58 @@ pub const VERSION: RuntimeVersion = RuntimeVersion {
     apis: RUNTIME_API_VERSIONS,
     transaction_version: 1,
 };
+
+#[derive(Debug, Default)]
+pub struct TestCircuit {
+    a: BlsScalar,
+    b: BlsScalar,
+    c: BlsScalar,
+    d: BlsScalar,
+    e: JubJubScalar,
+    f: JubJubAffine,
+}
+
+impl Circuit for TestCircuit {
+    const CIRCUIT_ID: [u8; 32] = [0xff; 32];
+    fn gadget(&mut self, composer: &mut TurboComposer) -> Result<(), Error> {
+        let a = composer.append_witness(self.a);
+        let b = composer.append_witness(self.b);
+
+        // Make first constraint a + b = c
+        let constraint = Constraint::new().left(1).right(1).public(-self.c).a(a).b(b);
+
+        composer.append_gate(constraint);
+
+        // Check that a and b are in range
+        composer.component_range(a, 1 << 6);
+        composer.component_range(b, 1 << 5);
+
+        // Make second constraint a * b = d
+        let constraint = Constraint::new()
+            .mult(1)
+            .output(1)
+            .public(-self.d)
+            .a(a)
+            .b(b);
+
+        composer.append_gate(constraint);
+
+        let e = composer.append_witness(self.e);
+        let scalar_mul_result =
+            composer.component_mul_generator(e, dusk_jubjub::GENERATOR_EXTENDED);
+        // Apply the constrain
+        composer.assert_equal_public_point(scalar_mul_result, self.f);
+        Ok(())
+    }
+
+    fn public_inputs(&self) -> Vec<PublicInputValue> {
+        vec![self.c.into(), self.d.into(), self.f.into()]
+    }
+
+    fn padded_gates(&self) -> usize {
+        1 << 11
+    }
+}
 
 /// This determines the average expected block time that we are targeting.
 /// Blocks will be produced at a minimum duration defined by `SLOT_DURATION`.
@@ -267,9 +321,10 @@ impl pallet_sudo::Config for Runtime {
 }
 
 /// Configure the pallet-template in pallets/template.
-// impl pallet_template::Config for Runtime {
-// 	type Event = Event;
-// }
+impl plonk_pallet::Config for Runtime {
+    type CustomCircuit = TestCircuit;
+	type Event = Event;
+}
 
 // Create the runtime by composing the FRAME pallets that were previously configured.
 construct_runtime!(
@@ -287,7 +342,7 @@ construct_runtime!(
         TransactionPayment: pallet_transaction_payment::{Module, Storage},
         Sudo: pallet_sudo::{Module, Call, Config<T>, Storage, Event<T>},
         // Include the custom logic from the pallet-template in the runtime.
-        // TemplateModule: pallet_template::{Module, Call, Storage, Event<T>},
+        TemplateModule: plonk_pallet::{Module, Call, Storage, Event<T>},
     }
 );
 
@@ -483,7 +538,7 @@ impl_runtime_apis! {
             add_benchmark!(params, batches, frame_system, SystemBench::<Runtime>);
             add_benchmark!(params, batches, pallet_balances, Balances);
             add_benchmark!(params, batches, pallet_timestamp, Timestamp);
-            // add_benchmark!(params, batches, pallet_template, TemplateModule);
+            add_benchmark!(params, batches, plonk_pallet, TemplateModule);
 
             if batches.is_empty() { return Err("Benchmark not found for this pallet.".into()) }
             Ok(batches)
