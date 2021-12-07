@@ -129,17 +129,14 @@ impl Circuit for TestCircuit {
 use rand_core::SeedableRng;
 use rand_xorshift::XorShiftRng;
 
-const rng: XorShiftRng = XorShiftRng::from_seed([
-    0x59, 0x62, 0xbe, 0x5d, 0x76, 0x3d, 0x31, 0x8d, 0x17, 0xdb, 0x37, 0x32, 0x54, 0x06,
-    0xbc, 0xe5,
-]);
-
 /// The trusted setup test Ok and Err
 #[test]
 fn trusted_setup() {
     new_test_ext().execute_with(|| {
+        let rng = get_rng();
         assert_ok!(Plonk::trusted_setup(Origin::signed(1), 12, rng));
 
+        let rng = get_rng();
         assert_eq!(
             Plonk::trusted_setup(Origin::signed(1), 12, rng),
             Err(DispatchErrorWithPostInfo {
@@ -154,14 +151,12 @@ fn trusted_setup() {
 #[test]
 fn verify() {
     new_test_ext().execute_with(|| {
+        let rng = get_rng();
         assert_ok!(Plonk::trusted_setup(Origin::signed(1), 12, rng));
 
         let pp = Plonk::public_parameter().unwrap();
-
         let mut circuit = TestCircuit::default();
-
         let (pk, vd) = circuit.compile(&pp).unwrap();
-
         let proof = {
             let mut circuit = TestCircuit {
                 a: BlsScalar::from(20u64),
@@ -173,13 +168,11 @@ fn verify() {
             };
             circuit.prove(&pp, &pk, b"Test").unwrap()
         };
-
         let public_inputs: Vec<PublicInputValue> = vec![
             BlsScalar::from(25u64).into(),
             BlsScalar::from(100u64).into(),
             JubJubAffine::from(dusk_jubjub::GENERATOR_EXTENDED * JubJubScalar::from(2u64)).into(),
         ];
-
         let fake_public_inputs: Vec<PublicInputValue> = vec![
             BlsScalar::from(24u64).into(),
             BlsScalar::from(100u64).into(),
@@ -193,7 +186,6 @@ fn verify() {
             public_inputs,
             Transcript(b"Test")
         ));
-
         assert_eq!(
             Plonk::verify(
                 Origin::signed(1),
@@ -214,14 +206,12 @@ fn verify() {
 #[test]
 fn plonk() {
     new_test_ext().execute_with(|| {
+        let rng = get_rng();
         assert_ok!(Plonk::trusted_setup(Origin::signed(1), 12, rng));
 
         let pp = Plonk::public_parameter().unwrap();
-
         let mut circuit = TestCircuit::default();
-
         let (pk, vd) = circuit.compile(&pp).unwrap();
-
         let proof = {
             let mut circuit = TestCircuit {
                 a: BlsScalar::from(20u64),
@@ -233,7 +223,6 @@ fn plonk() {
             };
             circuit.prove(&pp, &pk, b"Test").unwrap()
         };
-
         let public_inputs: Vec<PublicInputValue> = vec![
             BlsScalar::from(25u64).into(),
             BlsScalar::from(100u64).into(),
@@ -248,4 +237,11 @@ fn plonk() {
             Transcript(b"Test")
         ));
     });
+}
+
+fn get_rng() -> XorShiftRng {
+    XorShiftRng::from_seed([
+        0x59, 0x62, 0xbe, 0x5d, 0x76, 0x3d, 0x31, 0x8d, 0x17, 0xdb, 0x37, 0x32, 0x54, 0x06,
+        0xbc, 0xe5,
+    ])
 }

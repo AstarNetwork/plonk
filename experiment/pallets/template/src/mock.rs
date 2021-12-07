@@ -1,6 +1,6 @@
-use crate as pallet_template;
-use parity_jubjub;
-use parity_plonk::prelude::*;
+use crate as plonk_pallet;
+use dusk_jubjub;
+use dusk_plonk::prelude::*;
 use frame_support::parameter_types;
 use frame_system as system;
 use sp_core::H256;
@@ -20,7 +20,7 @@ frame_support::construct_runtime!(
         UncheckedExtrinsic = UncheckedExtrinsic,
     {
         System: frame_system::{Module, Call, Config, Storage, Event<T>},
-        TemplateModule: pallet_template::{Module, Call, Storage, Event<T>},
+        TemplateModule: plonk_pallet::{Module, Call, Storage, Event<T>},
     }
 );
 
@@ -91,9 +91,8 @@ impl Circuit for TestCircuit {
 
         let e = composer.append_witness(self.e);
         let scalar_mul_result =
-            composer.component_mul_generator(e, parity_jubjub::GENERATOR_EXTENDED);
-        // Apply the constrain
-        composer.assert_equal_public_point(scalar_mul_result, self.f);
+            composer.component_mul_generator(e, dusk_jubjub::GENERATOR_EXTENDED);
+        // Apply the constdusk       composer.assert_equal_public_point(scalar_mul_result, self.f);
         Ok(())
     }
 
@@ -106,7 +105,7 @@ impl Circuit for TestCircuit {
     }
 }
 
-impl pallet_template::Config for Test {
+impl plonk_pallet::Config for Test {
     type Event = Event;
     type CustomCircuit = TestCircuit;
 }
