@@ -33,6 +33,10 @@ sp-transaction-pool = { version = '3.0', default-features = false }
 sp-version = { version = '3.0', default-features = false }
 
 # local packages
+dusk-plonk = {version = "0.1", default-features = false, package="parity-plonk", path = "../pallets/template/dusk-plonk"}
+dusk-jubjub = {version = "0.1", default-features = false, package="plonk-jubjub", path = "../pallets/template/jubjub"}
+plonk-pallet = { default-features = false, path = "../pallets/template" }
+plonk-runtime-api = { default-features = false, path = "../pallets/template/rpc/runtime-api" }
 sum-storage = { default-features = false, path = "../pallets/template/sum-storage" }
 sum-storage-runtime-api = { default-features = false, path = "../pallets/template/sum-storage/runtime-api" }
 

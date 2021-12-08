@@ -33,6 +33,7 @@ where
     C: HeaderBackend<Block> + HeaderMetadata<Block, Error = BlockChainError> + 'static,
     C: Send + Sync + 'static,
     C::Api: BlockBuilder<Block>,
+    C::Api: plonk_runtime_api::PlonkApi<Block>,
     C::Api: sum_storage_runtime_api::SumStorageApi<Block>,
     P: TransactionPool + 'static,
 {
@@ -42,6 +43,10 @@ where
         client,
         ..
     } = deps;
+
+    io.extend_with(plonk_pallet_rpc::PlonkApi::to_delegate(
+        plonk_pallet_rpc::Plonk::new(client.clone()),
+    ));
 
     // Add a second RPC extension
     // Because this one calls a Runtime API it needs a reference to the client.

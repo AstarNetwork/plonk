@@ -53,6 +53,9 @@ sp-transaction-pool = '3.0'
 # RPC Node only works with Runtime's that provide the sum-storage-runtime-api
 # That means it only works with the api-runtime
 runtime = { package = "api-runtime", path = "../runtime" }
+
+plonk-pallet-rpc = { default-features = false, path = "../pallets/template/rpc" }
+plonk-runtime-api = { default-features = false, path = "../pallets/template/rpc/runtime-api" }
 sum-storage-rpc = { path = "../pallets/template/sum-storage/rpc" }
 sum-storage-runtime-api = { path = "../pallets/template/sum-storage/runtime-api" }
 

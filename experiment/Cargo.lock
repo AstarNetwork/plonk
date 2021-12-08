@@ -132,7 +132,11 @@ dependencies = [
  "pallet-sudo",
  "pallet-timestamp",
  "pallet-transaction-payment",
+ "parity-plonk",
  "parity-scale-codec 2.0.1",
+ "plonk-jubjub",
+ "plonk-pallet",
+ "plonk-runtime-api",
  "serde",
  "sp-api",
  "sp-block-builder",
@@ -4241,6 +4245,31 @@ dependencies = [
 ]
 
 [[package]]
+name = "plonk-pallet-rpc"
+version = "0.1.0"
+dependencies = [
+ "jsonrpc-core",
+ "jsonrpc-core-client",
+ "jsonrpc-derive",
+ "parity-plonk",
+ "parity-scale-codec 2.0.1",
+ "plonk-runtime-api",
+ "serde",
+ "sp-api",
+ "sp-blockchain",
+ "sp-rpc",
+ "sp-runtime",
+]
+
+[[package]]
+name = "plonk-runtime-api"
+version = "0.1.0"
+dependencies = [
+ "parity-plonk",
+ "sp-api",
+]
+
+[[package]]
 name = "plotters"
 version = "0.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4815,6 +4844,8 @@ dependencies = [
  "jsonrpc-derive",
  "log",
  "parking_lot 0.9.0",
+ "plonk-pallet-rpc",
+ "plonk-runtime-api",
  "sc-basic-authorship",
  "sc-cli",
  "sc-client-api",

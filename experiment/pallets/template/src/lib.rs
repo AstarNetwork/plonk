@@ -47,7 +47,11 @@ mod tests;
 #[cfg(feature = "runtime-benchmarks")]
 mod benchmarking;
 
-use dusk_plonk::prelude::{Circuit, Proof, PublicInputValue, PublicParameters, VerifierData};
+pub use dusk_jubjub::GENERATOR_EXTENDED;
+pub use dusk_plonk::prelude::{
+    BlsScalar, Circuit, Constraint, Error, JubJubAffine, JubJubScalar, Proof, PublicInputValue,
+    PublicParameters, TurboComposer, VerifierData,
+};
 use frame_support::pallet_prelude::*;
 use frame_system::pallet_prelude::*;
 use parity_scale_codec::{Decode, Encode};

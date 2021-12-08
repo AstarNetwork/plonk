@@ -13,6 +13,8 @@ include!(concat!(env!("OUT_DIR"), "/wasm_binary.rs"));
 pub mod genesis;
 
 use pallet_transaction_payment::CurrencyAdapter;
+use plonk_pallet::PublicParameters;
+use plonk_pallet::*;
 use sp_api::impl_runtime_apis;
 use sp_core::{OpaqueMetadata, H256};
 use sp_runtime::traits::{BlakeTwo256, Block as BlockT, IdentifyAccount, IdentityLookup, Verify};
@@ -207,6 +209,62 @@ impl pallet_transaction_payment::Config for Runtime {
 }
 
 // ---------------------- Recipe Pallet Configurations ----------------------
+
+#[derive(Debug, Default)]
+pub struct TestCircuit {
+    a: BlsScalar,
+    b: BlsScalar,
+    c: BlsScalar,
+    d: BlsScalar,
+    e: JubJubScalar,
+    f: JubJubAffine,
+}
+
+impl Circuit for TestCircuit {
+    const CIRCUIT_ID: [u8; 32] = [0xff; 32];
+    fn gadget(&mut self, composer: &mut TurboComposer) -> Result<(), Error> {
+        let a = composer.append_witness(self.a);
+        let b = composer.append_witness(self.b);
+
+        // Make first constraint a + b = c
+        let constraint = Constraint::new().left(1).right(1).public(-self.c).a(a).b(b);
+
+        composer.append_gate(constraint);
+
+        // Check that a and b are in range
+        composer.component_range(a, 1 << 6);
+        composer.component_range(b, 1 << 5);
+
+        // Make second constraint a * b = d
+        let constraint = Constraint::new()
+            .mult(1)
+            .output(1)
+            .public(-self.d)
+            .a(a)
+            .b(b);
+
+        composer.append_gate(constraint);
+
+        let e = composer.append_witness(self.e);
+        let scalar_mul_result = composer.component_mul_generator(e, GENERATOR_EXTENDED);
+        // Apply the constrain
+        composer.assert_equal_public_point(scalar_mul_result, self.f);
+        Ok(())
+    }
+
+    fn public_inputs(&self) -> Vec<PublicInputValue> {
+        vec![self.c.into(), self.d.into(), self.f.into()]
+    }
+
+    fn padded_gates(&self) -> usize {
+        1 << 11
+    }
+}
+
+impl plonk_pallet::Config for Runtime {
+    type CustomCircuit = TestCircuit;
+    type Event = Event;
+}
 impl sum_storage::Config for Runtime {
     type Event = Event;
 }
@@ -223,6 +281,7 @@ construct_runtime!(
         RandomnessCollectiveFlip: pallet_randomness_collective_flip::{Module, Call, Storage},
         Sudo: pallet_sudo::{Module, Call, Config<T>, Storage, Event<T>},
         TransactionPayment: pallet_transaction_payment::{Module, Storage},
+        Plonk: plonk_pallet::{Module, Call, Storage, Event<T>},
         SumStorage: sum_storage::{Module, Call, Storage, Event<T>},
     }
 );
@@ -318,6 +377,12 @@ impl_runtime_apis! {
     impl sp_offchain::OffchainWorkerApi<Block> for Runtime {
         fn offchain_worker(header: &<Block as BlockT>::Header) {
             Executive::offchain_worker(header)
+        }
+    }
+
+    impl plonk_runtime_api::PlonkApi<Block> for Runtime {
+        fn get_public_parameters() -> Option<PublicParameters> {
+            Plonk::get_public_parameters()
         }
     }
 
