@@ -1,62 +1,61 @@
 [package]
-authors = ['Substrate DevHub <https://github.com/substrate-developer-hub>']
-build = 'build.rs'
-description = 'A fresh FRAME-based Substrate node, ready for hacking.'
+name = 'rpc-node'
+version = "3.0.0"
 edition = '2018'
-homepage = 'https://substrate.dev'
-license = 'Unlicense'
-name = 'node-template'
-repository = 'https://github.com/substrate-developer-hub/substrate-node-template/'
-version = '3.0.0'
+authors = ['Substrate DevHub <https://github.com/substrate-developer-hub>']
+repository = 'https://github.com/substrate-developer-hub/recipes'
+description = "A Substrate node that demonstrates a custom RPC endpoint"
+build = 'build.rs'
+license = "GPL-3.0-or-later"
 
 [[bin]]
-name = 'node-template'
-
-[package.metadata.docs.rs]
-targets = ['x86_64-unknown-linux-gnu']
-
-[build-dependencies]
-substrate-build-script-utils = '3.0.0'
+name = 'rpc-node'
+path = 'src/main.rs'
 
 [dependencies]
-jsonrpc-core = '15.1.0'
-structopt = '0.3.8'
-
-# Substrate dependencies
-frame-benchmarking = '3.1.0'
-frame-benchmarking-cli = '3.0.0'
-pallet-transaction-payment-rpc = '3.0.0'
-sc-basic-authorship = '0.9.0'
-sc-cli = { features = ['wasmtime'], version = '0.9.0' }
-sc-client-api = '3.0.0'
-sc-consensus = '0.9.0'
-sc-consensus-aura = '0.9.0'
-sc-executor = { features = ['wasmtime'], version = '0.9.0' }
-sc-finality-grandpa = '0.9.0'
-sc-keystore = '3.0.0'
-sc-rpc = '3.0.0'
-sc-rpc-api = '0.9.0'
-sc-service = { features = ['wasmtime'], version = '0.9.0' }
-sc-telemetry = '3.0.0'
-sc-transaction-pool = '3.0.0'
-sp-api = '3.0.0'
-sp-block-builder = '3.0.0'
-sp-blockchain = '3.0.0'
-sp-consensus = '0.9.0'
-sp-consensus-aura = '0.9.0'
-sp-core = '3.0.0'
-sp-finality-grandpa = '3.0.0'
-sp-inherents = '3.0.0'
-sp-runtime = '3.0.0'
-sp-transaction-pool = '3.0.0'
-substrate-frame-rpc-system = '3.0.0'
-
-# local dependencies
-node-template-runtime = { path = '../runtime', version = '3.0.0' }
-plonk-pallet-rpc = { version = "0.1.0", path = "../pallets/template/rpc", default-features = false }
-jsonrpc-derive = "15.0"
+ctrlc = { features = ['termination'], version = '3.1.3' }
+futures = '0.3.1'
+futures01 = { package = 'futures', version = '0.1.29'}
+jsonrpc-core = "15.0"
 jsonrpc-core-client = "15.0"
+jsonrpc-derive = "15.0"
+log = '0.4.8'
+parking_lot = '0.9'
+structopt = "0.3.8"
+tokio = '0.1.22'
+trie-root = '0.15.2'
 
-[features]
-default = []
-runtime-benchmarks = ['node-template-runtime/runtime-benchmarks']
+# Substrate packages
+sc-basic-authorship = '0.9'
+sc-cli = '0.9'
+sc-client-api = '3.0'
+sc-consensus = '0.9'
+sc-consensus-manual-seal = '0.9'
+sc-executor = '0.9'
+sc-network = '0.9'
+sc-rpc = '3.0'
+sc-rpc-api = '0.9'
+sc-service = '0.9'
+sc-transaction-pool = '3.0'
+sp-api = '3.0'
+sp-block-builder = '3.0'
+sp-blockchain = '3.0'
+sp-consensus = '0.9'
+sp-core = '3.0'
+sp-inherents = '3.0'
+sp-io = '3.0'
+sp-runtime = '3.0'
+sp-timestamp = '3.0'
+sp-transaction-pool = '3.0'
+
+# local packages
+
+# RPC Node only works with Runtime's that provide the sum-storage-runtime-api
+# That means it only works with the api-runtime
+runtime = { package = "api-runtime", path = "../runtime" }
+sum-storage-rpc = { path = "../pallets/template/sum-storage/rpc" }
+sum-storage-runtime-api = { path = "../pallets/template/sum-storage/runtime-api" }
+
+[build-dependencies]
+substrate-build-script-utils = '3.0'
+vergen = '3.0.4'

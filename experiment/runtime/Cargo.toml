@@ -1,93 +1,68 @@
 [package]
+name = "api-runtime"
+version = "3.0.0"
+edition = "2018"
 authors = ['Substrate DevHub <https://github.com/substrate-developer-hub>']
-edition = '2018'
-homepage = 'https://substrate.dev'
-license = 'Unlicense'
-name = 'node-template-runtime'
-repository = 'https://github.com/substrate-developer-hub/substrate-node-template/'
-version = '3.0.0'
-
-[package.metadata.docs.rs]
-targets = ['x86_64-unknown-linux-gnu']
-
-[build-dependencies]
-substrate-wasm-builder = '4.0.0'
+repository = 'https://github.com/substrate-developer-hub/recipes'
+description = "A runtime that features a custom runtime API that calls into a pallet"
+license = "GPL-3.0-or-later"
 
 [dependencies]
-codec = { default-features = false, features = ['derive'], package = 'parity-scale-codec', version = '2.0.0' }
-hex-literal = { optional = true, version = '0.3.1' }
-serde = { version = "1.0.119", default-features = false, optional = true, features = ["derive"] }
+parity-scale-codec = { version = "2.0", default-features = false, features = ["derive"] }
+serde = { version = "1.0", optional = true, features = ["derive"] }
 
-# Substrate dependencies
-frame-benchmarking = { default-features = false, optional = true, version = '3.0.0' }
-frame-executive = { default-features = false, version = '3.0.0' }
-frame-support = { default-features = false, version = '3.0.0' }
-frame-system = { default-features = false, version = '3.0.0' }
-frame-system-benchmarking = { default-features = false, optional = true, version = '3.0.0' }
-frame-system-rpc-runtime-api = { default-features = false, version = '3.0.0' }
-pallet-aura = { default-features = false, version = '3.0.0' }
-pallet-balances = { default-features = false, version = '3.0.0' }
-pallet-grandpa = { default-features = false, version = '3.0.0' }
-pallet-randomness-collective-flip = { default-features = false, version = '3.0.0' }
-pallet-sudo = { default-features = false, version = '3.0.0' }
-pallet-timestamp = { default-features = false, version = '3.0.0' }
-pallet-transaction-payment = { default-features = false, version = '3.0.0' }
-pallet-transaction-payment-rpc-runtime-api = { default-features = false, version = '3.0.0' }
-sp-api = { default-features = false, version = '3.0.0' }
-sp-block-builder = { default-features = false, version = '3.0.0' }
-sp-consensus-aura = { default-features = false, version = '0.9.0' }
-sp-core = { default-features = false, version = '3.0.0' }
-sp-inherents = { default-features = false, version = '3.0.0' }
-sp-offchain = { default-features = false, version = '3.0.0' }
-sp-runtime = { default-features = false, version = '3.0.0' }
-sp-session = { default-features = false, version = '3.0.0' }
-sp-std = { default-features = false, version = '3.0.0' }
-sp-transaction-pool = { default-features = false, version = '3.0.0' }
-sp-version = { default-features = false, version = '3.0.0' }
+# Substrate packages
+frame-executive = { version = '3.0', default-features = false}
+frame-support = { version = '3.0', default-features = false }
+frame-system = { version = '3.0', default-features = false }
+pallet-balances = { version = '3.0', default-features = false }
+pallet-randomness-collective-flip = { version = '3.0', default-features = false }
+pallet-sudo = { version = '3.0', default-features = false }
+pallet-timestamp = { version = '3.0', default-features = false }
+pallet-transaction-payment = { version = '3.0', default-features = false }
+sp-api = { version = '3.0', default-features = false }
+sp-block-builder = { version = '3.0', default-features = false }
+sp-core = { version = '3.0', default-features = false }
+sp-inherents = { version = '3.0', default-features = false }
+sp-io = { version = '3.0', default-features = false }
+sp-offchain = { version = '3.0', default-features = false }
+sp-runtime = { version = '3.0', default-features = false }
+sp-session = { version = '3.0', default-features = false }
+sp-std = { version = '3.0', default-features = false }
+sp-transaction-pool = { version = '3.0', default-features = false }
+sp-version = { version = '3.0', default-features = false }
 
-# local dependencies
-plonk-pallet = { default-features = false, path = '../pallets/template', version = '0.1' }
-dusk-plonk = {version = "0.1", default-features = false, package="parity-plonk", path = "../pallets/template/dusk-plonk"}
-dusk-jubjub = {version = "0.1", default-features = false, package="plonk-jubjub", path = "../pallets/template/jubjub"}
+# local packages
+sum-storage = { default-features = false, path = "../pallets/template/sum-storage" }
+sum-storage-runtime-api = { default-features = false, path = "../pallets/template/sum-storage/runtime-api" }
+
+[build-dependencies]
+substrate-wasm-builder = "4.0.0"
 
 [features]
-default = ['std']
-runtime-benchmarks = [
-    'frame-benchmarking',
-    'frame-support/runtime-benchmarks',
-    'frame-system-benchmarking',
-    'frame-system/runtime-benchmarks',
-    'hex-literal',
-    'pallet-balances/runtime-benchmarks',
-    'plonk-pallet/runtime-benchmarks',
-    'pallet-timestamp/runtime-benchmarks',
-    'sp-runtime/runtime-benchmarks',
-]
+default = ["std"]
 std = [
-    'codec/std',
-    'frame-executive/std',
-    'frame-support/std',
-    'frame-system-rpc-runtime-api/std',
-    'frame-system/std',
-    'pallet-aura/std',
-    'pallet-balances/std',
-    'pallet-grandpa/std',
-    'pallet-randomness-collective-flip/std',
-    'pallet-sudo/std',
-    'plonk-pallet/std',
-    'pallet-timestamp/std',
-    'pallet-transaction-payment-rpc-runtime-api/std',
-    'pallet-transaction-payment/std',
-    'serde',
-    'sp-api/std',
-    'sp-block-builder/std',
-    'sp-consensus-aura/std',
-    'sp-core/std',
-    'sp-inherents/std',
-    'sp-offchain/std',
-    'sp-runtime/std',
-    'sp-session/std',
-    'sp-std/std',
-    'sp-transaction-pool/std',
-    'sp-version/std',
+	"frame-executive/std",
+	"frame-support/std",
+	"frame-system/std",
+	"pallet-balances/std",
+	"pallet-randomness-collective-flip/std",
+	"pallet-sudo/std",
+	"pallet-timestamp/std",
+	"pallet-transaction-payment/std",
+	"parity-scale-codec/std",
+	"serde",
+	"sp-api/std",
+	"sp-block-builder/std",
+	"sp-core/std",
+	"sp-inherents/std",
+	"sp-io/std",
+	"sp-offchain/std",
+	"sp-runtime/std",
+	"sp-session/std",
+	"sp-std/std",
+	"sp-transaction-pool/std",
+	"sp-version/std",
+	"sum-storage-runtime-api/std",
+	"sum-storage/std",
 ]
