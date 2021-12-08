@@ -36,6 +36,7 @@ where
     P: TransactionPool + 'static,
 {
     use pallet_transaction_payment_rpc::{TransactionPayment, TransactionPaymentApi};
+    use plonk_pallet_rpc::{Plonk, PlonkApi};
     use substrate_frame_rpc_system::{FullSystem, SystemApi};
 
     let mut io = jsonrpc_core::IoHandler::default();
@@ -58,7 +59,7 @@ where
     // Extend this RPC with a custom API by using the following syntax.
     // `YourRpcStruct` should have a reference to a client, which is needed
     // to call into the runtime.
-    // `io.extend_with(YourRpcTrait::to_delegate(YourRpcStruct::new(ReferenceToClient, ...)));`
+    io.extend_with(PlonkApi::to_delegate(Plonk::new(client.clone())));
 
     io
 }

@@ -3744,6 +3744,7 @@ dependencies = [
  "jsonrpc-core",
  "node-template-runtime",
  "pallet-transaction-payment-rpc",
+ "plonk-pallet-rpc",
  "sc-basic-authorship",
  "sc-cli",
  "sc-client-api",
@@ -4603,7 +4604,7 @@ checksum = "989d43012e2ca1c4a02507c67282691a0a3207f9dc67cec596b43fe925b3d325"
 
 [[package]]
 name = "plonk-bls12_381"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "bincode",
  "byteorder",
@@ -4650,6 +4651,31 @@ dependencies = [
  "sp-io",
  "sp-runtime",
  "sp-std",
+]
+
+[[package]]
+name = "plonk-pallet-rpc"
+version = "0.1.0"
+dependencies = [
+ "jsonrpc-core",
+ "jsonrpc-core-client",
+ "jsonrpc-derive",
+ "parity-plonk",
+ "parity-scale-codec",
+ "plonk-runtime-api",
+ "serde",
+ "sp-api",
+ "sp-blockchain",
+ "sp-rpc",
+ "sp-runtime",
+]
+
+[[package]]
+name = "plonk-runtime-api"
+version = "0.1.0"
+dependencies = [
+ "parity-plonk",
+ "sp-api",
 ]
 
 [[package]]

@@ -53,6 +53,7 @@ substrate-frame-rpc-system = '3.0.0'
 
 # local dependencies
 node-template-runtime = { path = '../runtime', version = '3.0.0' }
+plonk-pallet-rpc = { version = "0.1.0", path = "../pallets/template/rpc", default-features = false }
 
 [features]
 default = []

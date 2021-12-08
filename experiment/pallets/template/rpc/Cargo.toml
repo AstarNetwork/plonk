@@ -1,0 +1,30 @@
+[package]
+authors = ['NoCtrlZ<shinsaku.ashizawa@artree.co.jp>']
+description = 'zkSNARK plonk pallet rpc'
+edition = '2018'
+homepage = 'https://github.com/PlasmNetwork/plonk/'
+license = 'Unlicense'
+name = "plonk-pallet-rpc"
+version = "0.1.0"
+repository = 'https://github.com/PlasmNetwork/plonk/'
+
+[dependencies]
+codec = { package = "parity-scale-codec", version = "2.0" }
+jsonrpc-core = "15.0"
+jsonrpc-core-client = "15.0"
+jsonrpc-derive = "15.0"
+serde = { version = "1.0", default-features = false, features = ["derive"], optional = true }
+sp-api = { version = '3.0', default-features = false }
+sp-blockchain = { version = '3.0', default-features = false}
+sp-rpc = { version = '3.0', default-features = false}
+sp-runtime = { version = '3.0', default-features = false}
+plonk-runtime-api = { version = "0.1.0", path = "./runtime-api", default-features = false }
+dusk-plonk = {version = "0.1", default-features = false, package="parity-plonk", path = "../dusk-plonk"}
+
+[features]
+default = ["std"]
+std = [
+  "sp-api/std",
+  "sp-runtime/std",
+  "plonk-runtime-api/std"
+]
