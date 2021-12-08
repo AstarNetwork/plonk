@@ -3742,6 +3742,8 @@ dependencies = [
  "frame-benchmarking",
  "frame-benchmarking-cli",
  "jsonrpc-core",
+ "jsonrpc-core-client",
+ "jsonrpc-derive",
  "node-template-runtime",
  "pallet-transaction-payment-rpc",
  "plonk-pallet-rpc",

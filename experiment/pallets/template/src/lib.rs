@@ -51,17 +51,18 @@ use dusk_plonk::prelude::{Circuit, Proof, PublicInputValue, PublicParameters, Ve
 use frame_support::pallet_prelude::*;
 use frame_system::pallet_prelude::*;
 use parity_scale_codec::{Decode, Encode};
+use rand_xorshift::XorShiftRng;
 use sp_std::vec::Vec;
 
 #[frame_support::pallet]
 pub mod pallet {
     use super::{
         Circuit, Proof, PublicInputValue, PublicParameters, Transcript, Vec, VerifierData,
+        XorShiftRng,
     };
     use frame_support::dispatch::{DispatchErrorWithPostInfo, PostDispatchInfo};
     use frame_support::pallet_prelude::*;
     use frame_system::pallet_prelude::*;
-    use rand_xorshift::XorShiftRng;
 
     #[pallet::config]
     pub trait Config: frame_system::Config {
@@ -165,6 +166,14 @@ pub mod pallet {
 }
 
 impl<T: Config> Pallet<T> {
+    pub fn generate_public_parameters(
+        origin: OriginFor<T>,
+        val: u32,
+        rng: XorShiftRng,
+    ) -> DispatchResultWithPostInfo {
+        Self::trusted_setup(origin, val, rng)
+    }
+
     pub fn get_public_parameters() -> Option<PublicParameters> {
         PublicParameter::<T>::get()
     }

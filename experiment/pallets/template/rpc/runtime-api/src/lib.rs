@@ -5,7 +5,7 @@
 use dusk_plonk::prelude::PublicParameters;
 
 sp_api::decl_runtime_apis! {
-	pub trait PlonkApi {
-		fn get_public_parameters() -> Option<PublicParameters>;
-	}
+    pub trait PlonkApi {
+        fn get_public_parameters() -> Option<PublicParameters>;
+    }
 }

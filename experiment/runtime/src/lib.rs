@@ -40,10 +40,10 @@ use pallet_transaction_payment::CurrencyAdapter;
 pub use sp_runtime::BuildStorage;
 pub use sp_runtime::{Perbill, Permill};
 
-/// Import the template pallet.
-pub use plonk_pallet;
 use dusk_jubjub;
 use dusk_plonk::prelude::*;
+/// Import the template pallet.
+pub use plonk_pallet;
 
 /// An index to a block.
 pub type BlockNumber = u32;
@@ -323,7 +323,7 @@ impl pallet_sudo::Config for Runtime {
 /// Configure the pallet-template in pallets/template.
 impl plonk_pallet::Config for Runtime {
     type CustomCircuit = TestCircuit;
-	type Event = Event;
+    type Event = Event;
 }
 
 // Create the runtime by composing the FRAME pallets that were previously configured.
