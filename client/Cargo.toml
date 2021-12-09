@@ -12,3 +12,4 @@ futures = "0.1.26"
 
 [dev-dependencies]
 hyper = "0.12"
+plonk-pallet-rpc = {version = "0.1", path = "../experiment/pallets/template/rpc"}

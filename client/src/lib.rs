@@ -4,15 +4,20 @@ use futures::Future;
 use jsonrpc_client_transports::*;
 
 #[derive(Clone)]
-struct NodeClient(TypedClient);
+struct SubstrateClient {
+    client: RpcClient
+}
 
-impl From<RpcChannel> for NodeClient {
+#[derive(Clone)]
+struct RpcClient(TypedClient);
+
+impl From<RpcChannel> for RpcClient {
     fn from(channel: RpcChannel) -> Self {
-        NodeClient(channel.into())
+        RpcClient(channel.into())
     }
 }
 
-impl NodeClient {
+impl RpcClient {
     fn get_public_parameters(&self) -> impl Future<Item = String, Error = RpcError> {
         self.0.call_method("plonk_getPublicParameters", "[]", ())
     }
@@ -30,7 +35,7 @@ mod tests {
         let endpoint = "http://localhost:9933";
         let (tx, rx) = std::sync::mpsc::channel();
         let run = connect(&endpoint)
-            .and_then(|client: NodeClient| {
+            .and_then(|client: RpcClient| {
                 client.get_public_parameters().and_then(move |result| {
                     drop(client);
                     let _ = tx.send(result);
@@ -41,7 +46,8 @@ mod tests {
 
         rt::run(run);
 
-        let result = rx.recv_timeout(Duration::from_secs(3)).unwrap();
-        println!("{:?}", result);
+        let result = rx.recv_timeout(Duration::from_secs(3));
+        assert!(result.is_err());
+        println!("{:?}", result)
     }
 }
