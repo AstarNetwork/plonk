@@ -34,7 +34,6 @@ where
     C: Send + Sync + 'static,
     C::Api: BlockBuilder<Block>,
     C::Api: plonk_runtime_api::PlonkApi<Block>,
-    C::Api: sum_storage_runtime_api::SumStorageApi<Block>,
     P: TransactionPool + 'static,
 {
     let mut io = jsonrpc_core::IoHandler::default();
@@ -46,12 +45,6 @@ where
 
     io.extend_with(plonk_pallet_rpc::PlonkApi::to_delegate(
         plonk_pallet_rpc::Plonk::new(client.clone()),
-    ));
-
-    // Add a second RPC extension
-    // Because this one calls a Runtime API it needs a reference to the client.
-    io.extend_with(sum_storage_rpc::SumStorageApi::to_delegate(
-        sum_storage_rpc::SumStorage::new(client),
     ));
 
     // The final RPC extension receives commands for the manual seal consensus engine.

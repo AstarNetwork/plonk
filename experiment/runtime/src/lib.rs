@@ -208,7 +208,7 @@ impl pallet_transaction_payment::Config for Runtime {
     type FeeMultiplierUpdate = ();
 }
 
-// ---------------------- Recipe Pallet Configurations ----------------------
+// ---------------------- Plonk Pallet Configurations ----------------------
 
 #[derive(Debug, Default)]
 pub struct TestCircuit {
@@ -265,9 +265,6 @@ impl plonk_pallet::Config for Runtime {
     type CustomCircuit = TestCircuit;
     type Event = Event;
 }
-impl sum_storage::Config for Runtime {
-    type Event = Event;
-}
 
 construct_runtime!(
     pub enum Runtime where
@@ -282,7 +279,6 @@ construct_runtime!(
         Sudo: pallet_sudo::{Module, Call, Config<T>, Storage, Event<T>},
         TransactionPayment: pallet_transaction_payment::{Module, Storage},
         Plonk: plonk_pallet::{Module, Call, Storage, Event<T>},
-        SumStorage: sum_storage::{Module, Call, Storage, Event<T>},
     }
 );
 
@@ -383,17 +379,6 @@ impl_runtime_apis! {
     impl plonk_runtime_api::PlonkApi<Block> for Runtime {
         fn get_public_parameters() -> Option<PublicParameters> {
             Plonk::get_public_parameters()
-        }
-    }
-
-    // Here we implement our custom runtime API.
-    impl sum_storage_runtime_api::SumStorageApi<Block> for Runtime {
-        fn get_sum() -> u32 {
-            // This Runtime API calls into a specific pallet. Calling a pallet is a common
-            // design pattern. You can see most other APIs in this file do the same.
-            // It is also possible to write your logic right here in the runtime
-            // amalgamator file
-            SumStorage::get_sum()
         }
     }
 

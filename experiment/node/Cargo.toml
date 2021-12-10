@@ -56,8 +56,6 @@ runtime = { package = "api-runtime", path = "../runtime" }
 
 plonk-pallet-rpc = { default-features = false, path = "../pallets/template/rpc" }
 plonk-runtime-api = { default-features = false, path = "../pallets/template/rpc/runtime-api" }
-sum-storage-rpc = { path = "../pallets/template/sum-storage/rpc" }
-sum-storage-runtime-api = { path = "../pallets/template/sum-storage/runtime-api" }
 
 [build-dependencies]
 substrate-build-script-utils = '3.0'
