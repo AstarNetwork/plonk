@@ -1,12 +1,10 @@
-use crate::{
-    Circuit, Proof, PublicInputValue, PublicParameters, Transcript, VerifierData, XorShiftRng,
-};
+use crate::types::*;
 use frame_support::pallet_prelude::DispatchResultWithPostInfo;
 
 pub trait Plonk<AccountId> {
     type CustomCircuit: Circuit;
 
-    fn trusted_setup(who: &AccountId, val: u32, rng: XorShiftRng) -> DispatchResultWithPostInfo;
+    fn trusted_setup(who: &AccountId, val: u32, rng: ParityRng) -> DispatchResultWithPostInfo;
 
     fn get_public_parameters() -> Option<PublicParameters>;
 

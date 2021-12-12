@@ -48,19 +48,15 @@ mod tests;
 mod benchmarking;
 
 mod traits;
+mod types;
 
-pub use dusk_jubjub::GENERATOR_EXTENDED;
-pub use dusk_plonk::prelude::{
-    BlsScalar, Circuit, Constraint, Error, JubJubAffine, JubJubScalar, Proof, PublicInputValue,
-    PublicParameters, TurboComposer, VerifierData,
-};
+pub use traits::Plonk;
+pub use types::*;
+
 use frame_support::dispatch::{DispatchErrorWithPostInfo, PostDispatchInfo};
 use frame_support::pallet_prelude::*;
 use frame_system::pallet_prelude::*;
-use parity_scale_codec::{Decode, Encode};
-use rand_xorshift::XorShiftRng;
 use sp_std::vec::Vec;
-pub use traits::Plonk;
 
 #[frame_support::pallet]
 pub mod pallet {
@@ -109,7 +105,7 @@ pub mod pallet {
         pub fn trusted_setup(
             origin: OriginFor<T>,
             val: u32,
-            rng: XorShiftRng,
+            rng: ParityRng,
         ) -> DispatchResultWithPostInfo {
             let transactor = ensure_signed(origin)?;
             <Self as Plonk<_>>::trusted_setup(&transactor, val, rng)?;
@@ -138,7 +134,7 @@ impl<T: Config> Plonk<T::AccountId> for Pallet<T> {
     fn trusted_setup(
         _who: &T::AccountId,
         val: u32,
-        mut rng: XorShiftRng,
+        mut rng: ParityRng,
     ) -> DispatchResultWithPostInfo {
         match Self::public_parameter() {
             Some(_) => {
@@ -187,18 +183,5 @@ impl<T: Config> Plonk<T::AccountId> for Pallet<T> {
                 })
             }
         }
-    }
-}
-
-/// The struct for Merlin transcript
-#[derive(Debug, PartialEq, Clone, Encode)]
-pub struct Transcript(pub &'static [u8]);
-
-#[allow(unconditional_recursion)]
-impl Decode for Transcript {
-    fn decode<I: parity_scale_codec::Input>(
-        input: &mut I,
-    ) -> Result<Self, parity_scale_codec::Error> {
-        Decode::decode(input)
     }
 }
