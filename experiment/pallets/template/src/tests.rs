@@ -1,7 +1,6 @@
-use crate::{self as plonk, Config, Transcript};
+use crate::{self as plonk};
+use crate::{pallet::Config, types::*};
 
-use dusk_jubjub;
-use dusk_plonk::prelude::*;
 use frame_support::dispatch::{DispatchErrorWithPostInfo, PostDispatchInfo};
 use frame_support::{assert_ok, construct_runtime, parameter_types};
 use sp_core::H256;
@@ -110,8 +109,7 @@ impl Circuit for TestCircuit {
         composer.append_gate(constraint);
 
         let e = composer.append_witness(self.e);
-        let scalar_mul_result =
-            composer.component_mul_generator(e, dusk_jubjub::GENERATOR_EXTENDED);
+        let scalar_mul_result = composer.component_mul_generator(e, GENERATOR_EXTENDED);
         // Apply the constrain
         composer.assert_equal_public_point(scalar_mul_result, self.f);
         Ok(())
@@ -127,7 +125,6 @@ impl Circuit for TestCircuit {
 }
 
 use rand_core::SeedableRng;
-use rand_xorshift::XorShiftRng;
 
 /// The trusted setup test Ok and Err
 #[test]
@@ -164,19 +161,19 @@ fn verify() {
                 c: BlsScalar::from(25u64),
                 d: BlsScalar::from(100u64),
                 e: JubJubScalar::from(2u64),
-                f: JubJubAffine::from(dusk_jubjub::GENERATOR_EXTENDED * JubJubScalar::from(2u64)),
+                f: JubJubAffine::from(GENERATOR_EXTENDED * JubJubScalar::from(2u64)),
             };
             circuit.prove(&pp, &pk, b"Test").unwrap()
         };
         let public_inputs: Vec<PublicInputValue> = vec![
             BlsScalar::from(25u64).into(),
             BlsScalar::from(100u64).into(),
-            JubJubAffine::from(dusk_jubjub::GENERATOR_EXTENDED * JubJubScalar::from(2u64)).into(),
+            JubJubAffine::from(GENERATOR_EXTENDED * JubJubScalar::from(2u64)).into(),
         ];
         let fake_public_inputs: Vec<PublicInputValue> = vec![
             BlsScalar::from(24u64).into(),
             BlsScalar::from(100u64).into(),
-            JubJubAffine::from(dusk_jubjub::GENERATOR_EXTENDED * JubJubScalar::from(2u64)).into(),
+            JubJubAffine::from(GENERATOR_EXTENDED * JubJubScalar::from(2u64)).into(),
         ];
 
         assert_ok!(Plonk::verify(
@@ -219,14 +216,14 @@ fn plonk() {
                 c: BlsScalar::from(25u64),
                 d: BlsScalar::from(100u64),
                 e: JubJubScalar::from(2u64),
-                f: JubJubAffine::from(dusk_jubjub::GENERATOR_EXTENDED * JubJubScalar::from(2u64)),
+                f: JubJubAffine::from(GENERATOR_EXTENDED * JubJubScalar::from(2u64)),
             };
             circuit.prove(&pp, &pk, b"Test").unwrap()
         };
         let public_inputs: Vec<PublicInputValue> = vec![
             BlsScalar::from(25u64).into(),
             BlsScalar::from(100u64).into(),
-            JubJubAffine::from(dusk_jubjub::GENERATOR_EXTENDED * JubJubScalar::from(2u64)).into(),
+            JubJubAffine::from(GENERATOR_EXTENDED * JubJubScalar::from(2u64)).into(),
         ];
 
         assert_ok!(Plonk::verify(
@@ -239,8 +236,8 @@ fn plonk() {
     });
 }
 
-fn get_rng() -> XorShiftRng {
-    XorShiftRng::from_seed([
+fn get_rng() -> ParityRng {
+    ParityRng::from_seed([
         0x59, 0x62, 0xbe, 0x5d, 0x76, 0x3d, 0x31, 0x8d, 0x17, 0xdb, 0x37, 0x32, 0x54, 0x06, 0xbc,
         0xe5,
     ])
