@@ -54,21 +54,17 @@ pub use dusk_plonk::prelude::{
     BlsScalar, Circuit, Constraint, Error, JubJubAffine, JubJubScalar, Proof, PublicInputValue,
     PublicParameters, TurboComposer, VerifierData,
 };
+use frame_support::dispatch::{DispatchErrorWithPostInfo, PostDispatchInfo};
 use frame_support::pallet_prelude::*;
 use frame_system::pallet_prelude::*;
 use parity_scale_codec::{Decode, Encode};
 use rand_xorshift::XorShiftRng;
 use sp_std::vec::Vec;
+pub use traits::Plonk;
 
 #[frame_support::pallet]
 pub mod pallet {
-    use super::{
-        Circuit, Proof, PublicInputValue, PublicParameters, Transcript, Vec, VerifierData,
-        XorShiftRng,
-    };
-    use frame_support::dispatch::{DispatchErrorWithPostInfo, PostDispatchInfo};
-    use frame_support::pallet_prelude::*;
-    use frame_system::pallet_prelude::*;
+    use super::*;
 
     #[pallet::config]
     pub trait Config: frame_system::Config {
@@ -113,23 +109,11 @@ pub mod pallet {
         pub fn trusted_setup(
             origin: OriginFor<T>,
             val: u32,
-            mut rng: XorShiftRng,
+            rng: XorShiftRng,
         ) -> DispatchResultWithPostInfo {
-            let _ = ensure_signed(origin)?;
-            match Self::public_parameter() {
-                Some(_) => {
-                    return Err(DispatchErrorWithPostInfo {
-                        post_info: PostDispatchInfo::from(()),
-                        error: DispatchError::Other("already setup"),
-                    })
-                }
-                None => {
-                    let pp = PublicParameters::setup(1 << val, &mut rng).unwrap();
-                    PublicParameter::<T>::put(&pp);
-                    Event::<T>::TrustedSetup(pp);
-                    return Ok(().into());
-                }
-            }
+            let transactor = ensure_signed(origin)?;
+            <Self as Plonk<_>>::trusted_setup(&transactor, val, rng)?;
+            Ok(().into())
         }
 
         /// The function called when we verify the statement
@@ -141,57 +125,68 @@ pub mod pallet {
             public_inputs: Vec<PublicInputValue>,
             transcript_init: Transcript,
         ) -> DispatchResultWithPostInfo {
-            let _ = ensure_signed(origin)?;
-            match Self::public_parameter() {
-                Some(pp) => {
-                    match T::CustomCircuit::verify(
-                        &pp,
-                        &vd,
-                        &proof,
-                        &public_inputs,
-                        transcript_init.0,
-                    ) {
-                        Ok(_) => return Ok(().into()),
-                        Err(_) => {
-                            return Err(DispatchErrorWithPostInfo {
-                                post_info: PostDispatchInfo::from(()),
-                                error: DispatchError::Other("invalid proof"),
-                            })
-                        }
-                    }
-                }
-                None => {
-                    return Err(DispatchErrorWithPostInfo {
-                        post_info: PostDispatchInfo::from(()),
-                        error: DispatchError::Other("setup not yet"),
-                    })
-                }
-            }
+            let transactor = ensure_signed(origin)?;
+            <Self as Plonk<_>>::verify(&transactor, vd, proof, public_inputs, transcript_init)?;
+            Ok(().into())
         }
     }
 }
 
-impl<T: Config> Pallet<T> {
-    pub fn generate_public_parameters(
-        origin: OriginFor<T>,
+impl<T: Config> Plonk<T::AccountId> for Pallet<T> {
+    type CustomCircuit = T::CustomCircuit;
+
+    fn trusted_setup(
+        _who: &T::AccountId,
         val: u32,
-        rng: XorShiftRng,
+        mut rng: XorShiftRng,
     ) -> DispatchResultWithPostInfo {
-        Self::trusted_setup(origin, val, rng)
+        match Self::public_parameter() {
+            Some(_) => {
+                return Err(DispatchErrorWithPostInfo {
+                    post_info: PostDispatchInfo::from(()),
+                    error: DispatchError::Other("already setup"),
+                })
+            }
+            None => {
+                let pp = PublicParameters::setup(1 << val, &mut rng).unwrap();
+                PublicParameter::<T>::put(&pp);
+                Event::<T>::TrustedSetup(pp);
+                return Ok(().into());
+            }
+        }
     }
 
-    pub fn get_public_parameters() -> Option<PublicParameters> {
+    fn get_public_parameters() -> Option<PublicParameters> {
         PublicParameter::<T>::get()
     }
 
-    pub fn verify_proof(
-        origin: OriginFor<T>,
+    fn verify(
+        _who: &T::AccountId,
         vd: VerifierData,
         proof: Proof,
         public_inputs: Vec<PublicInputValue>,
         transcript_init: Transcript,
     ) -> DispatchResultWithPostInfo {
-        Self::verify(origin, vd, proof, public_inputs, transcript_init)
+        match Self::public_parameter() {
+            Some(pp) => {
+                match T::CustomCircuit::verify(&pp, &vd, &proof, &public_inputs, transcript_init.0)
+                {
+                    Ok(_) => return Ok(().into()),
+                    Err(_) => {
+                        return Err(DispatchErrorWithPostInfo {
+                            post_info: PostDispatchInfo::from(()),
+                            error: DispatchError::Other("invalid proof"),
+                        })
+                    }
+                }
+            }
+            None => {
+                return Err(DispatchErrorWithPostInfo {
+                    post_info: PostDispatchInfo::from(()),
+                    error: DispatchError::Other("setup not yet"),
+                })
+            }
+        }
     }
 }
 

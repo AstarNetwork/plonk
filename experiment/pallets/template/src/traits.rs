@@ -8,7 +8,7 @@ pub trait Plonk<AccountId> {
 
     fn trusted_setup(who: &AccountId, val: u32, rng: XorShiftRng) -> DispatchResultWithPostInfo;
 
-    fn get_public_parameters() -> PublicParameters;
+    fn get_public_parameters() -> Option<PublicParameters>;
 
     fn verify(
         who: &AccountId,
