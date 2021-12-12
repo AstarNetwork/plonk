@@ -47,6 +47,8 @@ mod tests;
 #[cfg(feature = "runtime-benchmarks")]
 mod benchmarking;
 
+mod traits;
+
 pub use dusk_jubjub::GENERATOR_EXTENDED;
 pub use dusk_plonk::prelude::{
     BlsScalar, Circuit, Constraint, Error, JubJubAffine, JubJubScalar, Proof, PublicInputValue,
