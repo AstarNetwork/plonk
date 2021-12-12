@@ -10,7 +10,7 @@ repository = 'https://github.com/PlasmNetwork/plonk/'
 
 [dependencies]
 sp-api = { version = '3.0', default-features = false}
-dusk-plonk = {version = "0.1", default-features = false, package="parity-plonk", path = "../../dusk-plonk"}
+dusk-plonk = {version = "0.2", default-features = false, package="parity-plonk"}
 
 [features]
 default = ["std"]

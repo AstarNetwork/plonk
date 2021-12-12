@@ -15,8 +15,8 @@ targets = ['x86_64-unknown-linux-gnu']
 
 [dependencies]
 # plonk
-parity-plonk = {version = "0.1", default-features = false, path = "./dusk-plonk"}
-plonk-jubjub = {version = "0.1", default-features = false, path = "./jubjub"}
+parity-plonk = {version = "0.2", default-features = false}
+plonk-jubjub = {version = "0.2", default-features = false}
 rand_core = {version="0.6", default-features = false }
 
 # substrate pallet

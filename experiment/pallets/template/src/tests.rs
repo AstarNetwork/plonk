@@ -85,7 +85,7 @@ pub struct TestCircuit {
 
 impl Circuit for TestCircuit {
     const CIRCUIT_ID: [u8; 32] = [0xff; 32];
-    fn gadget(&mut self, composer: &mut TurboComposer) -> Result<(), Error> {
+    fn gadget(&mut self, composer: &mut TurboComposer) -> Result<(), PlonkError> {
         let a = composer.append_witness(self.a);
         let b = composer.append_witness(self.b);
 

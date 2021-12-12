@@ -1,4 +1,3 @@
-#![cfg_attr(not(feature = "std"), no_std)]
 // Copyright (C) 2020-2021 Artree (JP) LLC.
 // SPDX-License-Identifier: Apache-2.0
 
@@ -35,6 +34,7 @@
 //! - **Public Parameter** The parameter generated during setup. The users can use
 //! this parameter to prove their transaction validity. This parameter can be gotten
 //! throught RPC client.
+#![cfg_attr(not(feature = "std"), no_std)]
 
 pub use pallet::*;
 
