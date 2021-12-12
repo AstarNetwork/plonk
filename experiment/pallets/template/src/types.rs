@@ -1,6 +1,6 @@
 pub use parity_plonk::prelude::{
-    BlsScalar, Circuit, Constraint, Error, JubJubAffine, JubJubScalar, Proof, PublicInputValue,
-    PublicParameters, TurboComposer, VerifierData,
+    BlsScalar, Circuit, Constraint, Error as PlonkError, JubJubAffine, JubJubScalar, Proof,
+    PublicInputValue, PublicParameters, TurboComposer, VerifierData,
 };
 pub use parity_rand_xorshift::XorShiftRng as ParityRng;
 use parity_scale_codec::{Decode, Encode};

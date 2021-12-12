@@ -30,6 +30,7 @@ impl<C, M> Plonk<C, M> {
 #[derive(Debug)]
 pub enum Error {
     SetupNotYetError,
+    ServerError,
 }
 
 impl<C, Block> PlonkApi<<Block as BlockT>::Hash> for Plonk<C, Block>
@@ -53,7 +54,7 @@ where
                 Some(p) => return Ok(p),
                 None => {
                     return Err(RpcError {
-                        code: ErrorCode::ServerError(9875),
+                        code: ErrorCode::ServerError(Error::SetupNotYetError as i64),
                         message: "setup not yet error".into(),
                         data: Some(format!("{:?}", Error::SetupNotYetError).into()),
                     })
@@ -61,7 +62,7 @@ where
             },
             Err(e) => {
                 return Err(RpcError {
-                    code: ErrorCode::ServerError(9876),
+                    code: ErrorCode::ServerError(Error::ServerError as i64),
                     message: "server error".into(),
                     data: Some(format!("{:?}", e).into()),
                 })

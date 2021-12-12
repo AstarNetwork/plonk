@@ -13,7 +13,6 @@ include!(concat!(env!("OUT_DIR"), "/wasm_binary.rs"));
 pub mod genesis;
 
 use pallet_transaction_payment::CurrencyAdapter;
-use plonk_pallet::PublicParameters;
 use plonk_pallet::*;
 use sp_api::impl_runtime_apis;
 use sp_core::{OpaqueMetadata, H256};
@@ -222,7 +221,7 @@ pub struct TestCircuit {
 
 impl Circuit for TestCircuit {
     const CIRCUIT_ID: [u8; 32] = [0xff; 32];
-    fn gadget(&mut self, composer: &mut TurboComposer) -> Result<(), Error> {
+    fn gadget(&mut self, composer: &mut TurboComposer) -> Result<(), PlonkError> {
         let a = composer.append_witness(self.a);
         let b = composer.append_witness(self.b);
 

@@ -128,6 +128,12 @@ pub mod pallet {
     }
 }
 
+impl<T: Config> Pallet<T> {
+    pub fn get_public_parameters() -> Option<PublicParameters> {
+        PublicParameter::<T>::get()
+    }
+}
+
 impl<T: Config> Plonk<T::AccountId> for Pallet<T> {
     type CustomCircuit = T::CustomCircuit;
 
@@ -150,10 +156,6 @@ impl<T: Config> Plonk<T::AccountId> for Pallet<T> {
                 return Ok(().into());
             }
         }
-    }
-
-    fn get_public_parameters() -> Option<PublicParameters> {
-        PublicParameter::<T>::get()
     }
 
     fn verify(
