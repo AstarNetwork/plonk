@@ -1,0 +1,19 @@
+name: Pallet Test
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master, develop ]
+
+jobs:
+  build:
+    name: Pallet Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+      - name: Add Target
+        run: rustup target add wasm32-unknown-unknown
+      - name: Build
+        run: cd example && cargo build --all-features

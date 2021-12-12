@@ -47,7 +47,6 @@ mod tests {
         rt::run(run);
 
         let result = rx.recv_timeout(Duration::from_secs(3));
-        assert!(result.is_err());
-        println!("{:?}", result)
+        assert!(result.is_err())
     }
 }

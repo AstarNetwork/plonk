@@ -1,72 +1,72 @@
-# name: Pallet Test
-# on:
-#   push:
-#     branches: [ master ]
-#   pull_request:
-#     branches: [ master, develop ]
+name: Pallet Test
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master, develop ]
 
-# jobs:
-#   build:
-#     name: Pallet Build
-#     runs-on: ubuntu-latest
+jobs:
+  build:
+    name: Pallet Build
+    runs-on: ubuntu-latest
 
-#     steps:
-#       - uses: actions/checkout@v2
-#       - uses: actions-rs/toolchain@v1
-#       - name: Add Target
-#         run: rustup target add wasm32-unknown-unknown
-#       - name: Build
-#         uses: actions-rs/cargo@v1
-#         with:
-#           command: build
-#           args: --all-features
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+      - name: Add Target
+        run: rustup target add wasm32-unknown-unknown
+      - name: Build
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --all-features
 
-#   test:
-#     name: Pallet Test
-#     runs-on: ubuntu-latest
+  test:
+    name: Pallet Test
+    runs-on: ubuntu-latest
 
-#     steps:
-#       - uses: actions/checkout@v2
-#       - uses: actions-rs/toolchain@v1
-#       - name: Build
-#         uses: actions-rs/cargo@v1
-#         with:
-#           command: test
-#           args: --verbose --release --all --all-features
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+      - name: Build
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
+          args: --verbose --release --all --all-features
 
-#   extra:
-#     name: Pallet Benches And Examples
-#     runs-on: ubuntu-latest
+  extra:
+    name: Pallet Benches And Examples
+    runs-on: ubuntu-latest
 
-#     steps:
-#       - uses: actions/checkout@v2
-#       - uses: actions-rs/toolchain@v1
-#       - name: Build
-#         uses: actions-rs/cargo@v1
-#         with:
-#           command: build
-#           args: --benches --examples --all-features
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+      - name: Build
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --benches --examples --all-features
 
-#   format:
-#     name: Code Format Check
-#     runs-on: ubuntu-latest
+  format:
+    name: Code Format Check
+    runs-on: ubuntu-latest
 
-#     steps:
-#       - uses: actions/checkout@v2
-#       - uses: actions-rs/toolchain@v1
-#       - run: rustup component add rustfmt
-#       - uses: actions-rs/cargo@v1
-#         with:
-#           command: fmt
-#           args: --all -- --check
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+      - run: rustup component add rustfmt
+      - uses: actions-rs/cargo@v1
+        with:
+          command: fmt
+          args: --all -- --check
 
-#   docker:
-#     name: Docker Image
-#     runs-on: ubuntu-latest
+  docker:
+    name: Docker Image
+    runs-on: ubuntu-latest
 
-#     steps:
-#       - uses: actions/checkout@v2
-#       - name: docker-compose build
-#         run: docker-compose build
-#       - name: docker-compose test
-#         run: EXEC_CMD=test docker-compose up
+    steps:
+      - uses: actions/checkout@v2
+      - name: docker-compose build
+        run: docker-compose build
+      - name: docker-compose test
+        run: EXEC_CMD=test docker-compose up

@@ -132,9 +132,7 @@ dependencies = [
  "pallet-sudo",
  "pallet-timestamp",
  "pallet-transaction-payment",
- "parity-plonk",
  "parity-scale-codec",
- "plonk-jubjub",
  "plonk-pallet",
  "plonk-runtime-api",
  "serde",
@@ -3942,9 +3940,10 @@ dependencies = [
 
 [[package]]
 name = "plonk-pallet"
-version = "0.1.3"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d51c28b0c05b2a989a8465c3091c2fae6a66bc3144c50b7cfc531e6120914983"
 dependencies = [
- "frame-benchmarking",
  "frame-support",
  "frame-system",
  "parity-plonk",
@@ -3954,15 +3953,14 @@ dependencies = [
  "rand 0.8.3",
  "rand_core 0.6.3",
  "serde",
- "sp-core",
- "sp-io",
- "sp-runtime",
  "sp-std",
 ]
 
 [[package]]
 name = "plonk-pallet-rpc"
-version = "0.1.0"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c709549c78b4df2dc8c27f2075a5ae81a3dfffe9eb9239a5d6c4f4647e9d91b7"
 dependencies = [
  "jsonrpc-core",
  "jsonrpc-core-client",
@@ -3970,7 +3968,6 @@ dependencies = [
  "parity-plonk",
  "parity-scale-codec",
  "plonk-runtime-api",
- "serde",
  "sp-api",
  "sp-blockchain",
  "sp-rpc",
@@ -3980,6 +3977,8 @@ dependencies = [
 [[package]]
 name = "plonk-runtime-api"
 version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8b8928b8bb9721e1446996fa411c712f3d09bdfa0ea54637cdd55aa0ad34dd7a"
 dependencies = [
  "parity-plonk",
  "sp-api",

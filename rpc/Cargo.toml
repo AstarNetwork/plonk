@@ -4,8 +4,8 @@ description = 'zkSNARK plonk pallet rpc'
 edition = '2018'
 homepage = 'https://github.com/PlasmNetwork/plonk/'
 license = 'Unlicense'
-name = "plonk-pallet"
-version = "0.1.0"
+name = "plonk-pallet-rpc"
+version = "0.1.1"
 repository = 'https://github.com/PlasmNetwork/plonk/'
 
 [dependencies]
@@ -18,13 +18,5 @@ sp-api = { version = '3.0', default-features = false }
 sp-blockchain = { version = '3.0', default-features = false}
 sp-rpc = { version = '3.0', default-features = false}
 sp-runtime = { version = '3.0', default-features = false}
-plonk-runtime-api = { version = "0.1.0", path = "../runtime-api", default-features = false }
-dusk-plonk = {version = "0.1", package="parity-plonk"}
-
-[features]
-default = ["std"]
-std = [
-  "sp-api/std",
-  "sp-runtime/std",
-  "plonk-runtime-api/std"
-]
+plonk-runtime-api = { version = '0.1' }
+parity-plonk = { version = "0.2", default-features = false }
