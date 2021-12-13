@@ -1,3 +1,4 @@
+#[allow(dead_code)]
 use crate as plonk_pallet;
 use crate::*;
 use frame_support::parameter_types;
@@ -53,14 +54,21 @@ impl system::Config for Test {
     type SS58Prefix = SS58Prefix;
 }
 
+// Implement a circuit that checks:
+// 1) a + b = c where C is a PI
+// 2) a <= 2^6
+// 3) b <= 2^5
+// 4) a * b = d where D is a PI
+// 5) JubJub::GENERATOR * e(JubJubScalar) = f where F is a Public Input
+
 #[derive(Debug, Default)]
 pub struct TestCircuit {
-    a: BlsScalar,
-    b: BlsScalar,
-    c: BlsScalar,
-    d: BlsScalar,
-    e: JubJubScalar,
-    f: JubJubAffine,
+    pub a: BlsScalar,
+    pub b: BlsScalar,
+    pub c: BlsScalar,
+    pub d: BlsScalar,
+    pub e: JubJubScalar,
+    pub f: JubJubAffine,
 }
 
 impl Circuit for TestCircuit {
@@ -90,7 +98,7 @@ impl Circuit for TestCircuit {
 
         let e = composer.append_witness(self.e);
         let scalar_mul_result = composer.component_mul_generator(e, GENERATOR_EXTENDED);
-        // Apply the constdusk       composer.assert_equal_public_point(scalar_mul_result, self.f);
+        composer.assert_equal_public_point(scalar_mul_result, self.f);
         Ok(())
     }
 

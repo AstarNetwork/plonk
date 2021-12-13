@@ -13,12 +13,12 @@ The following functions are the libraries we are going to implement as pallet an
 - Generate proof
 - Verify proof
 
-## Documentation
+## Reference
 
-We have two documentations.
-
+The tutorial importing `plonk-pallet` to runtime and node.
 - [Tutorial](https://astarnetwork.github.io/plonk/)  
-How to implement the custom circuit on the `Substrate` with `plonk-pallet`.
 
-- [Rust Doc](https://docs.rs/plonk-pallet/latest/plonk_pallet/)  
-The description for crate contents.
+The `pallet` dependencies rustdoc.
+- [`plonk-pallet`](https://docs.rs/plonk-pallet/latest/plonk_pallet/)  
+- [`plonk-pallet-rpc`](https://docs.rs/plonk-pallet-rpc/latest/plonk_pallet_rpc/)  
+- [`plonk-runtime-api`](https://docs.rs/plonk-runtime-api/latest/plonk_runtime_api/)

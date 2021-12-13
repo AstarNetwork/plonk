@@ -6,7 +6,7 @@ pub use parity_rand_xorshift::XorShiftRng as ParityRng;
 use parity_scale_codec::{Decode, Encode};
 pub use plonk_jubjub::GENERATOR_EXTENDED;
 
-/// The struct for Merlin transcript
+/// The struct for Merlin transcript and used for proof verify
 #[derive(Debug, PartialEq, Clone, Encode)]
 pub struct Transcript(pub &'static [u8]);
 

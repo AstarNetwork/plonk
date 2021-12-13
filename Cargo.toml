@@ -7,7 +7,7 @@ license = "Apache-2.0"
 name = 'plonk-pallet'
 readme = 'README.md'
 repository = 'https://github.com/PlasmNetwork/plonk/'
-version = '0.2.0'
+version = '0.2.1'
 
 [package.metadata.docs.rs]
 targets = ['x86_64-unknown-linux-gnu']

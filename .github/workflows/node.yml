@@ -1,4 +1,4 @@
-name: Pallet Test
+name: Node Test
 on:
   push:
     branches: [ master ]
@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    name: Pallet Build
+    name: Node Build
     runs-on: ubuntu-latest
 
     steps:
@@ -16,4 +16,4 @@ jobs:
       - name: Add Target
         run: rustup target add wasm32-unknown-unknown
       - name: Build
-        run: cd example && cargo build --all-features
+        run: cd examples && cargo build --all-features

@@ -18,22 +18,37 @@
 //! - [`Config`]
 //! - [`Call`]
 //! - [`Pallet`]
+//! - [`Plonk`]
 //!
 //! ## Overview
 //!
 //! The Plonk pallet provides functions for:
 //!
-//! - Setup parameters
-//! - Verify zkp proof
+//! - Setup public parameters API
+//! - Get public parameters RPC
+//! - Verify zkp proof API
 //!
 //! ### Terminology
 //!
-//! - **Custome Circuit** The circuit type should be replaced with your own circuit.
+//! - **Custom Circuit** The circuit type should be replaced with your own circuit.
 //! This circuit should be defined on both blockchain runtime and offchain client.
 //!
 //! - **Public Parameter** The parameter generated during setup. The users can use
 //! this parameter to prove their transaction validity. This parameter can be gotten
 //! throught RPC client.
+//!
+//! ### Intruduce
+//! There four steps to use `plonk-pallet`.
+//!
+//! 1. Import `plonk-pallet` to your substrate runtime and node
+//! 2. Define your custom circuit and overwride circuit type
+//! 3. Use `plonk-pallet` in your pallet
+//! 4. Open `get_public_parameters` RPC
+//!
+//! `get_public_parameters` is the RPC method and, `trusted_setup` and `verify` are
+//! the dispatchable function and API for other pallet.
+//!
+//! You can see the details with [tutorial](https://astarnetwork.github.io/plonk)
 #![cfg_attr(not(feature = "std"), no_std)]
 
 pub use pallet::*;
@@ -61,10 +76,10 @@ pub mod pallet {
 
     #[pallet::config]
     pub trait Config: frame_system::Config {
-        /// The circuit customized by developer.
+        /// The circuit customized by developer
         type CustomCircuit: Circuit;
 
-        /// The overarching event type.
+        /// The overarching event type
         type Event: From<Event<Self>> + IsType<<Self as frame_system::Config>::Event>;
     }
 
@@ -82,9 +97,9 @@ pub mod pallet {
 
     #[pallet::error]
     pub enum Error<T> {
-        /// Error names should be descriptive.
+        /// Error names should be descriptive
         NoneValue,
-        /// Errors should have helpful documentation associated with them.
+        /// Errors should have helpful documentation associated with them
         StorageOverflow,
     }
 
@@ -126,14 +141,17 @@ pub mod pallet {
 }
 
 impl<T: Config> Pallet<T> {
+    /// The RPC method to get public parameters
     pub fn get_public_parameters() -> Option<PublicParameters> {
         PublicParameter::<T>::get()
     }
 }
 
 impl<T: Config> Plonk<T::AccountId> for Pallet<T> {
+    /// The circuit customized by developer
     type CustomCircuit = T::CustomCircuit;
 
+    /// The API method to setup public parameters
     fn trusted_setup(
         _who: &T::AccountId,
         val: u32,
@@ -155,6 +173,7 @@ impl<T: Config> Plonk<T::AccountId> for Pallet<T> {
         }
     }
 
+    /// The API method to verify the proof validity
     fn verify(
         _who: &T::AccountId,
         vd: VerifierData,
