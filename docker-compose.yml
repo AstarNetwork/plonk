@@ -1,10 +1,7 @@
 version: '3'
 services:
     plonk:
-        build:
-            context: .
-            args:
-                EXEC_CMD: ${EXEC_CMD}
+        build: .
         container_name: plonk
         tty: true
         stdin_open: true

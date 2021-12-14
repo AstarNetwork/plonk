@@ -4,18 +4,16 @@ This is `plonk` pallet implemented as an extension of [duck-network plonk](https
 
 ## Abstract
 
-We'd like to implement the plonk library as a pallet in order for developers to customize circuits and use the plonk protocol.
+We implemented the plonk library as a pallet in order for developers to customize circuits and use the plonk protocol on Substrate runtime. This project allowed us to use following functionalities.
 
-The following functions are the libraries we are going to implement as pallet and client.
-
-- Custom circuit builder
+- Custom circuit
 - Trusted setup
 - Generate proof
 - Verify proof
 
 ## Reference
 
-The tutorial importing `plonk-pallet` to runtime and node.
+The tutorial importing `plonk-pallet` to your pallet and test these plonk functions.
 - [Tutorial](https://astarnetwork.github.io/plonk/)  
 
 The `pallet` dependencies rustdoc.

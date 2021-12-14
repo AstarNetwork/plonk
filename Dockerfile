@@ -1,11 +1,18 @@
-FROM shinsaku0523/nightly-2021-11-17:latest
+FROM ubuntu:16.04
 
-ARG EXEC_CMD
+WORKDIR /app
 
-ENV EXEC_CMD $EXEC_CMD
+# rust path
+ENV PATH=$PATH:/root/.cargo/bin
+
+RUN apt-get update -y &&\
+    apt-get install build-essential curl wget -y
+
+# enable rust
+RUN curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain nightly-2021-11-17
 
 COPY . .
 
-RUN cargo build --all-targets
+RUN cargo test --no-run
 
-CMD cargo $EXEC_CMD
+CMD cargo test
