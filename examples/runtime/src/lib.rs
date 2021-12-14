@@ -265,6 +265,10 @@ impl plonk_pallet::Config for Runtime {
     type Event = Event;
 }
 
+impl zk_storage::Config for Runtime {
+    type Event = Event;
+}
+
 construct_runtime!(
     pub enum Runtime where
         Block = Block,
@@ -278,6 +282,7 @@ construct_runtime!(
         Sudo: pallet_sudo::{Module, Call, Config<T>, Storage, Event<T>},
         TransactionPayment: pallet_transaction_payment::{Module, Storage},
         Plonk: plonk_pallet::{Module, Call, Storage, Event<T>},
+        ZkStorage: zk_storage::{Module, Call, Storage, Event<T>},
     }
 );
 

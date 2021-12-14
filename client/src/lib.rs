@@ -1,28 +1,3 @@
-#![allow(dead_code)]
-
-use futures::Future;
-use jsonrpc_client_transports::*;
-
-#[derive(Clone)]
-struct SubstrateClient {
-    client: RpcClient
-}
-
-#[derive(Clone)]
-struct RpcClient(TypedClient);
-
-impl From<RpcChannel> for RpcClient {
-    fn from(channel: RpcChannel) -> Self {
-        RpcClient(channel.into())
-    }
-}
-
-impl RpcClient {
-    fn get_public_parameters(&self) -> impl Future<Item = String, Error = RpcError> {
-        self.0.call_method("plonk_getPublicParameters", "[]", ())
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
