@@ -76,7 +76,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="0_0_introduction.html">Introduction</a></li><li class="chapter-item expanded affix "><a href="0_1_tutorial.html">Tutorial</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="0_0_tutorial.html">Tutorial</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -135,16 +135,265 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="introduction"><a class="header" href="#introduction">Introduction</a></h1>
+                        <h1 id="tutorial"><a class="header" href="#tutorial">Tutorial</a></h1>
 <p>We are going to use zk SNARKs on substrate-based blockchain. In this tutorial, we import <code>plonk-pallet</code> to substrate runtime, generate the proof and verify.</p>
 <p>To use <code>plonk-pallet</code> on substrate-based blockchain, we need to do following steps.</p>
 <ol>
 <li>Define the <code>plonk-pallet</code> as depencencies</li>
-<li>Import the <code>plonk-pallet</code> and <code>plonk-runtime-api</code> to runtime</li>
-<li>Create customize <code>Circuit</code></li>
-<li>Import the <code>plonk-pallet</code> and <code>plonk-pallet-rpc</code> to rpc node</li>
+<li>Couple the <code>plonk-pallet</code> to your own pallet</li>
+<li>Define the <code>plonk-pallet</code> functions on your pallet</li>
+<li>Import the coupling pallet to <code>TestRuntime</code> and define your <code>Circuit</code></li>
+<li>Test whether the functions work correctly</li>
 </ol>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="tutorial"><a class="header" href="#tutorial">Tutorial</a></h1>
+<h2 id="1define-the-plonk-pallet-as-depencencies"><a class="header" href="#1define-the-plonk-pallet-as-depencencies">1.Define the <code>plonk-pallet</code> as depencencies</a></h2>
+<p>First of all, you need to define the <code>plonk-pallet</code> when you start to implement your pallet. Please define as following.</p>
+<ul>
+<li>Cargo.toml</li>
+</ul>
+<pre><code>[dependencies]
+plonk-pallet = { version = '0.2', default-features = false }
+rand_core = {version=&quot;0.6&quot;, default-features = false }
+</code></pre>
+<p>The <code>plonk-pallet</code> depends on <code>rand_core</code> so please import it.</p>
+<h2 id="2couple-the-plonk-pallet-to-your-own-pallet"><a class="header" href="#2couple-the-plonk-pallet-to-your-own-pallet">2.Couple the <code>plonk-pallet</code> to your own pallet</a></h2>
+<p>The next, the <code>plonk-pallet</code> need to be coupled with your pallet. Please couple the pallet <code>Config</code> as following.</p>
+<ul>
+<li>src/lib.rs</li>
+</ul>
+<pre><code class="language-rs">#[frame_support::pallet]
+pub mod pallet {
+    use frame_support::pallet_prelude::*;
+    use frame_system::pallet_prelude::*;
+    pub use plonk_pallet::{ParityRng, Proof, PublicInputValue, Transcript, VerifierData};
+
+    /// Copuliing configuration trait with plonk_pallet.
+    #[pallet::config]
+    pub trait Config: frame_system::Config + plonk_pallet::Config {
+        /// The overarching event type.
+        type Event: From&lt;Event&lt;Self&gt;&gt; + IsType&lt;&lt;Self as frame_system::Config&gt;::Event&gt;;
+    }
+</code></pre>
+<p>With this step, you can use the <code>plonk-pallet</code> in your pallet through <code>Module</code>.</p>
+<h2 id="3define-the-plonk-pallet-functions-on-your-pallet"><a class="header" href="#3define-the-plonk-pallet-functions-on-your-pallet">3.Define the <code>plonk-pallet</code> functions on your pallet</a></h2>
+<p>The next, let's define the <code>plonk-pallet</code> function on your pallet. We are going to define the <code>trusted_setup</code> function which generates the public parameters refered as to <code>srs</code> and the <code>verify</code> function which verified the proof. In this tutorial, we use <a href="https://github.com/JoshOrndorff/recipes/blob/master/pallets/sum-storage/src/lib.rs">sum-storage</a> pallet as example and add the <code>verify</code> function before set <code>Thing1</code> storage value on <code>set_thing_1</code>. If the <code>verify</code> is success, the <code>set_thing_1</code> can set <code>Thing1</code> value.</p>
+<ul>
+<li>src/lib.rs</li>
+</ul>
+<pre><code class="language-rs">    // The module's dispatchable functions.
+    #[pallet::call]
+    impl&lt;T: Config&gt; Pallet&lt;T&gt; {
+        // Coupled trusted setup
+        #[pallet::weight(10_000)]
+        pub fn trusted_setup(
+            origin: OriginFor&lt;T&gt;,
+            val: u32,
+            rng: ParityRng,
+        ) -&gt; DispatchResultWithPostInfo {
+            plonk_pallet::Pallet::&lt;T&gt;::trusted_setup(origin, val, rng)?;
+            Ok(().into())
+        }
+
+    /// Sets the first simple storage value
+    #[pallet::weight(10_000)]
+    pub fn set_thing_1(
+        origin: OriginFor&lt;T&gt;,
+        val: u32,
+        vd: VerifierData,
+        proof: Proof,
+        public_inputs: Vec&lt;PublicInputValue&gt;,
+        transcript_init: Transcript,
+    ) -&gt; DispatchResultWithPostInfo {
+        // Define the proof varification
+        plonk_pallet::Pallet::&lt;T&gt;::verify(origin, vd, proof, public_inputs, transcript_init)?;
+
+        Thing1::&lt;T&gt;::put(val);
+
+        Self::deposit_event(Event::ValueSet(1, val));
+        Ok(().into())
+    }
+</code></pre>
+<p>With this step, we can check whether the proof is valid before setting the <code>Thing1</code> value and only if the proof is valid, the value is set.</p>
+<h2 id="4import-the-coupling-pallet-to-testruntime-and-define-your-circuit"><a class="header" href="#4import-the-coupling-pallet-to-testruntime-and-define-your-circuit">4.Import the coupling pallet to <code>TestRuntime</code> and define your <code>Circuit</code></a></h2>
+<p>We already imported the <code>plonk-pallet</code> functions so we are going to import it to <code>TestRumtime</code> and define your customized <code>Circuit</code>.</p>
+<p>In order to use <code>plonk-pallet</code> in <code>TestRuntime</code>, we need to import <code>plonk-pallet</code> crate and define the pallet config to <code>construct_runtime</code> as following.</p>
+<ul>
+<li>src/tests.rs</li>
+</ul>
+<pre><code>use crate::{self as sum_storage, Config};
+
+use frame_support::dispatch::{DispatchError, DispatchErrorWithPostInfo, PostDispatchInfo};
+use frame_support::{assert_ok, construct_runtime, parameter_types};
+
+// Import `plonk_pallet` and dependency
+pub use plonk_pallet::*;
+use rand_core::SeedableRng;
+
+--- snip ---
+
+construct_runtime!(
+    pub enum TestRuntime where
+        Block = Block,
+        NodeBlock = Block,
+        UncheckedExtrinsic = UncheckedExtrinsic,
+    {
+        System: frame_system::{Module, Call, Config, Storage, Event&lt;T&gt;},
+        // Define the `plonk_pallet` in `contruct_runtime`
+        Plonk: plonk_pallet::{Module, Call, Storage, Event&lt;T&gt;},
+        {YourPallet}: {your_pallet}::{Module, Call, Storage, Event&lt;T&gt;},
+    }
+);
+</code></pre>
+<p>As the final step of runtime configuration, we define the zk-SNARKs circuit and extend the <code>TestRuntime</code> config with it. You can replace <code>TestCircuit</code> with your own circuit.</p>
+<pre><code class="language-rs">// Implement a circuit that checks:
+// 1) a + b = c where C is a PI
+// 2) a &lt;= 2^6
+// 3) b &lt;= 2^5
+// 4) a * b = d where D is a PI
+// 5) JubJub::GENERATOR * e(JubJubScalar) = f where F is a Public Input
+
+#[derive(Debug, Default)]
+pub struct TestCircuit {
+    pub a: BlsScalar,
+    pub b: BlsScalar,
+    pub c: BlsScalar,
+    pub d: BlsScalar,
+    pub e: JubJubScalar,
+    pub f: JubJubAffine,
+}
+
+impl Circuit for TestCircuit {
+    const CIRCUIT_ID: [u8; 32] = [0xff; 32];
+    fn gadget(&amp;mut self, composer: &amp;mut TurboComposer) -&gt; Result&lt;(), PlonkError&gt; {
+        let a = composer.append_witness(self.a);
+        let b = composer.append_witness(self.b);
+
+        // Make first constraint a + b = c
+        let constraint = Constraint::new().left(1).right(1).public(-self.c).a(a).b(b);
+
+        composer.append_gate(constraint);
+
+        // Check that a and b are in range
+        composer.component_range(a, 1 &lt;&lt; 6);
+        composer.component_range(b, 1 &lt;&lt; 5);
+
+        // Make second constraint a * b = d
+        let constraint = Constraint::new()
+            .mult(1)
+            .output(1)
+            .public(-self.d)
+            .a(a)
+            .b(b);
+
+        composer.append_gate(constraint);
+
+        let e = composer.append_witness(self.e);
+        let scalar_mul_result = composer.component_mul_generator(e, GENERATOR_EXTENDED);
+        composer.assert_equal_public_point(scalar_mul_result, self.f);
+        Ok(())
+    }
+
+    fn public_inputs(&amp;self) -&gt; Vec&lt;PublicInputValue&gt; {
+        vec![self.c.into(), self.d.into(), self.f.into()]
+    }
+
+    fn padded_gates(&amp;self) -&gt; usize {
+        1 &lt;&lt; 11
+    }
+}
+
+impl plonk_pallet::Config for TestRuntime {
+    type CustomCircuit = TestCircuit;
+    type Event = Event;
+}
+</code></pre>
+<p>With this step, we finish to setup the plonk runtime environment.</p>
+<h2 id="5test-whether-the-functions-work-correctly"><a class="header" href="#5test-whether-the-functions-work-correctly">5.Test whether the functions work correctly</a></h2>
+<p>The plonk functions is available on your pallet so we are going to test them as following tests.</p>
+<pre><code class="language-rs">
+/// The trusted setup test Ok and Err
+#[test]
+fn trusted_setup() {
+    new_test_ext().execute_with(|| {
+        let rng = get_rng();
+        assert_ok!(Plonk::trusted_setup(Origin::signed(1), 12, rng));
+
+        let rng = get_rng();
+        assert_eq!(
+            Plonk::trusted_setup(Origin::signed(1), 12, rng),
+            Err(DispatchErrorWithPostInfo {
+                post_info: PostDispatchInfo::from(()),
+                error: DispatchError::Other(&quot;already setup&quot;),
+            })
+        );
+    })
+}
+
+/// The set `Thing1` storage with valid proof
+#[test]
+fn sums_thing_one_with_valid_proof() {
+    new_test_ext().execute_with(|| {
+        let rng = get_rng();
+        assert_ok!(Plonk::trusted_setup(Origin::signed(1), 12, rng));
+
+        let pp = Plonk::public_parameter().unwrap();
+        let mut circuit = TestCircuit::default();
+        let (pk, vd) = circuit.compile(&amp;pp).unwrap();
+        let proof = {
+            let mut circuit = TestCircuit {
+                a: BlsScalar::from(20u64),
+                b: BlsScalar::from(5u64),
+                c: BlsScalar::from(25u64),
+                d: BlsScalar::from(100u64),
+                e: JubJubScalar::from(2u64),
+                f: JubJubAffine::from(GENERATOR_EXTENDED * JubJubScalar::from(2u64)),
+            };
+            circuit.prove(&amp;pp, &amp;pk, b&quot;Test&quot;).unwrap()
+        };
+        let public_inputs: Vec&lt;PublicInputValue&gt; = vec![
+            BlsScalar::from(25u64).into(),
+            BlsScalar::from(100u64).into(),
+            JubJubAffine::from(GENERATOR_EXTENDED * JubJubScalar::from(2u64)).into(),
+        ];
+
+        assert_ok!(SumStorage::set_thing_1(Origin::signed(1), 42, vd, proof, public_inputs, Transcript(b&quot;Test&quot;)));
+        assert_eq!(SumStorage::get_sum(), 42);
+    });
+}
+
+/// The set `Thing1` storage with invalid proof
+#[test]
+fn sums_thing_one_with_invalid_proof() {
+    new_test_ext().execute_with(|| {
+        let rng = get_rng();
+        assert_ok!(Plonk::trusted_setup(Origin::signed(1), 12, rng));
+
+        let pp = Plonk::public_parameter().unwrap();
+        let mut circuit = TestCircuit::default();
+        let (pk, vd) = circuit.compile(&amp;pp).unwrap();
+        let proof = {
+            let mut circuit = TestCircuit {
+                a: BlsScalar::from(20u64),
+                b: BlsScalar::from(5u64),
+                c: BlsScalar::from(25u64),
+                d: BlsScalar::from(100u64),
+                e: JubJubScalar::from(2u64),
+                f: JubJubAffine::from(GENERATOR_EXTENDED * JubJubScalar::from(2u64)),
+            };
+            circuit.prove(&amp;pp, &amp;pk, b&quot;Test&quot;).unwrap()
+        };
+        let public_inputs: Vec&lt;PublicInputValue&gt; = vec![
+            // Change the value
+            BlsScalar::from(24u64).into(),
+            BlsScalar::from(100u64).into(),
+            JubJubAffine::from(GENERATOR_EXTENDED * JubJubScalar::from(2u64)).into(),
+        ];
+
+        assert!(SumStorage::set_thing_1(Origin::signed(1), 42, vd, proof, public_inputs, Transcript(b&quot;Test&quot;)).is_err());
+        assert_eq!(SumStorage::get_sum(), 0);
+    });
+}
+</code></pre>
+<p>With above tests, we can confirm that your pallet is coupling with <code>plonk-pallet</code> and these functions work correctly. You can check the <code>plonk-pallet</code> specification <a href="https://docs.rs/plonk-pallet/latest/plonk_pallet/">here</a>. Happy hacking!</p>
 
                     </main>
 
@@ -160,6 +409,20 @@
 
         </div>
 
+        <!-- Livereload script (if served using the cli tool) -->
+        <script type="text/javascript">
+            var socket = new WebSocket("ws://localhost:3000/__livereload");
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
         <script type="text/javascript">
             window.playground_copyable = true;
         </script>

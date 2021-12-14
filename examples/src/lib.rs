@@ -6,15 +6,14 @@
 //! the two storage items.
 
 pub use pallet::*;
-pub use plonk_pallet::ParityRng;
 
 #[cfg(test)]
 mod tests;
 #[frame_support::pallet]
 pub mod pallet {
-    use super::ParityRng;
     use frame_support::pallet_prelude::*;
     use frame_system::pallet_prelude::*;
+    pub use plonk_pallet::{ParityRng, Proof, PublicInputValue, Transcript, VerifierData};
 
     /// Copuliing configuration trait with plonk_pallet.
     #[pallet::config]
@@ -61,8 +60,16 @@ pub mod pallet {
 
         /// Sets the first simple storage value
         #[pallet::weight(10_000)]
-        pub fn set_thing_1(origin: OriginFor<T>, val: u32) -> DispatchResultWithPostInfo {
-            let _ = ensure_signed(origin)?;
+        pub fn set_thing_1(
+            origin: OriginFor<T>,
+            val: u32,
+            vd: VerifierData,
+            proof: Proof,
+            public_inputs: Vec<PublicInputValue>,
+            transcript_init: Transcript,
+        ) -> DispatchResultWithPostInfo {
+            // Define the proof varification
+            plonk_pallet::Pallet::<T>::verify(origin, vd, proof, public_inputs, transcript_init)?;
 
             Thing1::<T>::put(val);
 

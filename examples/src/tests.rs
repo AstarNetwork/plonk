@@ -2,6 +2,8 @@ use crate::{self as sum_storage, Config};
 
 use frame_support::dispatch::{DispatchError, DispatchErrorWithPostInfo, PostDispatchInfo};
 use frame_support::{assert_ok, construct_runtime, parameter_types};
+
+// Import `plonk_pallet` and dependency
 pub use plonk_pallet::*;
 use rand_core::SeedableRng;
 use sp_core::H256;
@@ -20,7 +22,7 @@ construct_runtime!(
         UncheckedExtrinsic = UncheckedExtrinsic,
     {
         System: frame_system::{Module, Call, Config, Storage, Event<T>},
-
+        // Define the `plonk_pallet` in `contruct_runtime`
         Plonk: plonk_pallet::{Module, Call, Storage, Event<T>},
         SumStorage: sum_storage::{Module, Call, Storage, Event<T>},
     }
@@ -138,14 +140,6 @@ fn default_sum_zero() {
     });
 }
 
-#[test]
-fn sums_thing_one() {
-    new_test_ext().execute_with(|| {
-        assert_ok!(SumStorage::set_thing_1(Origin::signed(1), 42));
-        assert_eq!(SumStorage::get_sum(), 42);
-    });
-}
-
 /// The trusted setup test Ok and Err
 #[test]
 fn trusted_setup() {
@@ -164,11 +158,68 @@ fn trusted_setup() {
     })
 }
 
+/// The set `Thing1` storage with valid proof
 #[test]
-fn sums_thing_two() {
+fn sums_thing_one_with_valid_proof() {
     new_test_ext().execute_with(|| {
-        assert_ok!(SumStorage::set_thing_2(Origin::signed(1), 42));
+        let rng = get_rng();
+        assert_ok!(Plonk::trusted_setup(Origin::signed(1), 12, rng));
+
+        let pp = Plonk::public_parameter().unwrap();
+        let mut circuit = TestCircuit::default();
+        let (pk, vd) = circuit.compile(&pp).unwrap();
+        let proof = {
+            let mut circuit = TestCircuit {
+                a: BlsScalar::from(20u64),
+                b: BlsScalar::from(5u64),
+                c: BlsScalar::from(25u64),
+                d: BlsScalar::from(100u64),
+                e: JubJubScalar::from(2u64),
+                f: JubJubAffine::from(GENERATOR_EXTENDED * JubJubScalar::from(2u64)),
+            };
+            circuit.prove(&pp, &pk, b"Test").unwrap()
+        };
+        let public_inputs: Vec<PublicInputValue> = vec![
+            BlsScalar::from(25u64).into(),
+            BlsScalar::from(100u64).into(),
+            JubJubAffine::from(GENERATOR_EXTENDED * JubJubScalar::from(2u64)).into(),
+        ];
+
+        assert_ok!(SumStorage::set_thing_1(Origin::signed(1), 42, vd, proof, public_inputs, Transcript(b"Test")));
         assert_eq!(SumStorage::get_sum(), 42);
+    });
+}
+
+/// The set `Thing1` storage with invalid proof
+#[test]
+fn sums_thing_one_with_invalid_proof() {
+    new_test_ext().execute_with(|| {
+        let rng = get_rng();
+        assert_ok!(Plonk::trusted_setup(Origin::signed(1), 12, rng));
+
+        let pp = Plonk::public_parameter().unwrap();
+        let mut circuit = TestCircuit::default();
+        let (pk, vd) = circuit.compile(&pp).unwrap();
+        let proof = {
+            let mut circuit = TestCircuit {
+                a: BlsScalar::from(20u64),
+                b: BlsScalar::from(5u64),
+                c: BlsScalar::from(25u64),
+                d: BlsScalar::from(100u64),
+                e: JubJubScalar::from(2u64),
+                f: JubJubAffine::from(GENERATOR_EXTENDED * JubJubScalar::from(2u64)),
+            };
+            circuit.prove(&pp, &pk, b"Test").unwrap()
+        };
+        let public_inputs: Vec<PublicInputValue> = vec![
+            // Change the value
+            BlsScalar::from(24u64).into(),
+            BlsScalar::from(100u64).into(),
+            JubJubAffine::from(GENERATOR_EXTENDED * JubJubScalar::from(2u64)).into(),
+        ];
+
+        assert!(SumStorage::set_thing_1(Origin::signed(1), 42, vd, proof, public_inputs, Transcript(b"Test")).is_err());
+        assert_eq!(SumStorage::get_sum(), 0);
     });
 }
 
