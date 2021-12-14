@@ -16,6 +16,10 @@ frame-system = { version = '3.0', default-features = false}
 sp-runtime = { version = '3.0', default-features = false}
 sp-std = { version = '3.0', default-features = false}
 
+# plonk pallet
+plonk-pallet = { version = '0.2', default-features = false }
+rand_core = {version="0.6", default-features = false }
+
 [dev-dependencies]
 serde = '1.0'
 sp-core = '3.0'

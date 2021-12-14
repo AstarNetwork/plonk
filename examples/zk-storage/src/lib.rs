@@ -6,17 +6,19 @@
 //! the two storage items.
 
 pub use pallet::*;
+pub use plonk_pallet::ParityRng;
 
 #[cfg(test)]
 mod tests;
 #[frame_support::pallet]
 pub mod pallet {
+    use super::ParityRng;
     use frame_support::pallet_prelude::*;
     use frame_system::pallet_prelude::*;
 
-    /// The module's configuration trait.
+    /// Copuliing configuration trait with plonk_pallet.
     #[pallet::config]
-    pub trait Config: frame_system::Config {
+    pub trait Config: frame_system::Config + plonk_pallet::Config {
         /// The overarching event type.
         type Event: From<Event<Self>> + IsType<<Self as frame_system::Config>::Event>;
     }
@@ -46,6 +48,17 @@ pub mod pallet {
     // The module's dispatchable functions.
     #[pallet::call]
     impl<T: Config> Pallet<T> {
+        // Coupled trusted setup
+        #[pallet::weight(10_000)]
+        pub fn trusted_setup(
+            origin: OriginFor<T>,
+            val: u32,
+            rng: ParityRng,
+        ) -> DispatchResultWithPostInfo {
+            plonk_pallet::Pallet::<T>::trusted_setup(origin, val, rng)?;
+            Ok(().into())
+        }
+
         /// Sets the first simple storage value
         #[pallet::weight(10_000)]
         pub fn set_thing_1(origin: OriginFor<T>, val: u32) -> DispatchResultWithPostInfo {

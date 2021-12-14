@@ -1,6 +1,9 @@
 use crate::{self as sum_storage, Config};
 
+use frame_support::dispatch::{DispatchError, DispatchErrorWithPostInfo, PostDispatchInfo};
 use frame_support::{assert_ok, construct_runtime, parameter_types};
+pub use plonk_pallet::*;
+use rand_core::SeedableRng;
 use sp_core::H256;
 use sp_runtime::{
     testing::Header,
@@ -17,6 +20,8 @@ construct_runtime!(
         UncheckedExtrinsic = UncheckedExtrinsic,
     {
         System: frame_system::{Module, Call, Config, Storage, Event<T>},
+
+        Plonk: plonk_pallet::{Module, Call, Storage, Event<T>},
         SumStorage: sum_storage::{Module, Call, Storage, Event<T>},
     }
 );
@@ -51,6 +56,68 @@ impl frame_system::Config for TestRuntime {
     type SS58Prefix = ();
 }
 
+// Implement a circuit that checks:
+// 1) a + b = c where C is a PI
+// 2) a <= 2^6
+// 3) b <= 2^5
+// 4) a * b = d where D is a PI
+// 5) JubJub::GENERATOR * e(JubJubScalar) = f where F is a Public Input
+
+#[derive(Debug, Default)]
+pub struct TestCircuit {
+    pub a: BlsScalar,
+    pub b: BlsScalar,
+    pub c: BlsScalar,
+    pub d: BlsScalar,
+    pub e: JubJubScalar,
+    pub f: JubJubAffine,
+}
+
+impl Circuit for TestCircuit {
+    const CIRCUIT_ID: [u8; 32] = [0xff; 32];
+    fn gadget(&mut self, composer: &mut TurboComposer) -> Result<(), PlonkError> {
+        let a = composer.append_witness(self.a);
+        let b = composer.append_witness(self.b);
+
+        // Make first constraint a + b = c
+        let constraint = Constraint::new().left(1).right(1).public(-self.c).a(a).b(b);
+
+        composer.append_gate(constraint);
+
+        // Check that a and b are in range
+        composer.component_range(a, 1 << 6);
+        composer.component_range(b, 1 << 5);
+
+        // Make second constraint a * b = d
+        let constraint = Constraint::new()
+            .mult(1)
+            .output(1)
+            .public(-self.d)
+            .a(a)
+            .b(b);
+
+        composer.append_gate(constraint);
+
+        let e = composer.append_witness(self.e);
+        let scalar_mul_result = composer.component_mul_generator(e, GENERATOR_EXTENDED);
+        composer.assert_equal_public_point(scalar_mul_result, self.f);
+        Ok(())
+    }
+
+    fn public_inputs(&self) -> Vec<PublicInputValue> {
+        vec![self.c.into(), self.d.into(), self.f.into()]
+    }
+
+    fn padded_gates(&self) -> usize {
+        1 << 11
+    }
+}
+
+impl plonk_pallet::Config for TestRuntime {
+    type CustomCircuit = TestCircuit;
+    type Event = Event;
+}
+
 impl Config for TestRuntime {
     type Event = Event;
 }
@@ -79,6 +146,24 @@ fn sums_thing_one() {
     });
 }
 
+/// The trusted setup test Ok and Err
+#[test]
+fn trusted_setup() {
+    new_test_ext().execute_with(|| {
+        let rng = get_rng();
+        assert_ok!(Plonk::trusted_setup(Origin::signed(1), 12, rng));
+
+        let rng = get_rng();
+        assert_eq!(
+            Plonk::trusted_setup(Origin::signed(1), 12, rng),
+            Err(DispatchErrorWithPostInfo {
+                post_info: PostDispatchInfo::from(()),
+                error: DispatchError::Other("already setup"),
+            })
+        );
+    })
+}
+
 #[test]
 fn sums_thing_two() {
     new_test_ext().execute_with(|| {
@@ -87,11 +172,9 @@ fn sums_thing_two() {
     });
 }
 
-#[test]
-fn sums_both_values() {
-    new_test_ext().execute_with(|| {
-        assert_ok!(SumStorage::set_thing_1(Origin::signed(1), 42));
-        assert_ok!(SumStorage::set_thing_2(Origin::signed(1), 43));
-        assert_eq!(SumStorage::get_sum(), 85);
-    });
+fn get_rng() -> ParityRng {
+    ParityRng::from_seed([
+        0x59, 0x62, 0xbe, 0x5d, 0x76, 0x3d, 0x31, 0x8d, 0x17, 0xdb, 0x37, 0x32, 0x54, 0x06, 0xbc,
+        0xe5,
+    ])
 }
