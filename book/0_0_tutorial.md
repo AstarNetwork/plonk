@@ -34,7 +34,7 @@ pub mod pallet {
     use frame_system::pallet_prelude::*;
     pub use plonk_pallet::{ParityRng, Proof, PublicInputValue, Transcript, VerifierData};
 
-    /// Copuliing configuration trait with plonk_pallet.
+    /// Coupling configuration trait with plonk_pallet.
     #[pallet::config]
     pub trait Config: frame_system::Config + plonk_pallet::Config {
         /// The overarching event type.

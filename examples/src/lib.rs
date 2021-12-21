@@ -68,7 +68,7 @@ pub mod pallet {
             public_inputs: Vec<PublicInputValue>,
             transcript_init: Transcript,
         ) -> DispatchResultWithPostInfo {
-            // Define the proof varification
+            // Define the proof verification
             plonk_pallet::Pallet::<T>::verify(origin, vd, proof, public_inputs, transcript_init)?;
 
             Thing1::<T>::put(val);
