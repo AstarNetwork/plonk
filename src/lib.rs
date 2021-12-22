@@ -117,7 +117,7 @@ pub mod pallet {
         pub fn trusted_setup(
             origin: OriginFor<T>,
             val: u32,
-            rng: ParityRng,
+            rng: FullcodecRng,
         ) -> DispatchResultWithPostInfo {
             let transactor = ensure_signed(origin)?;
             <Self as Plonk<_>>::trusted_setup(&transactor, val, rng)?;
@@ -155,7 +155,7 @@ impl<T: Config> Plonk<T::AccountId> for Pallet<T> {
     fn trusted_setup(
         _who: &T::AccountId,
         val: u32,
-        mut rng: ParityRng,
+        mut rng: FullcodecRng,
     ) -> DispatchResultWithPostInfo {
         match Self::public_parameter() {
             Some(_) => {

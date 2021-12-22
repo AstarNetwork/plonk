@@ -163,7 +163,7 @@ rand_core = {version=&quot;0.6&quot;, default-features = false }
 pub mod pallet {
     use frame_support::pallet_prelude::*;
     use frame_system::pallet_prelude::*;
-    pub use plonk_pallet::{ParityRng, Proof, PublicInputValue, Transcript, VerifierData};
+    pub use plonk_pallet::{FullcodecRng, Proof, PublicInputValue, Transcript, VerifierData};
 
     /// Copuliing configuration trait with plonk_pallet.
     #[pallet::config]
@@ -186,7 +186,7 @@ pub mod pallet {
         pub fn trusted_setup(
             origin: OriginFor&lt;T&gt;,
             val: u32,
-            rng: ParityRng,
+            rng: FullcodecRng,
         ) -&gt; DispatchResultWithPostInfo {
             plonk_pallet::Pallet::&lt;T&gt;::trusted_setup(origin, val, rng)?;
             Ok(().into())

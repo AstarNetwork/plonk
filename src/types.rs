@@ -1,10 +1,10 @@
-pub use parity_plonk::prelude::{
+pub use fullcodec_jubjub::GENERATOR_EXTENDED;
+pub use fullcodec_plonk::prelude::{
     BlsScalar, Circuit, Constraint, Error as PlonkError, JubJubAffine, JubJubScalar, Proof,
     PublicInputValue, PublicParameters, TurboComposer, VerifierData,
 };
-pub use parity_rand_xorshift::XorShiftRng as ParityRng;
+pub use fullcodec_rand_xorshift::XorShiftRng as FullcodecRng;
 use parity_scale_codec::{Decode, Encode};
-pub use plonk_jubjub::GENERATOR_EXTENDED;
 
 /// The struct for Merlin transcript and used for proof verify
 #[derive(Debug, PartialEq, Clone, Encode)]

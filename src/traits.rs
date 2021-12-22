@@ -9,7 +9,7 @@ pub trait Plonk<AccountId> {
 
     /// The public parameters generation function
     /// This is the dispatchable function and assumed to be called by other pallet as API
-    fn trusted_setup(who: &AccountId, val: u32, rng: ParityRng) -> DispatchResultWithPostInfo;
+    fn trusted_setup(who: &AccountId, val: u32, rng: FullcodecRng) -> DispatchResultWithPostInfo;
 
     /// The proof verify function
     /// This is the dispatchable function and assumed to be called by other pallet as API

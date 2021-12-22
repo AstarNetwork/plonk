@@ -32,7 +32,7 @@ The next, the `plonk-pallet` need to be coupled with your pallet. Please couple 
 pub mod pallet {
     use frame_support::pallet_prelude::*;
     use frame_system::pallet_prelude::*;
-    pub use plonk_pallet::{ParityRng, Proof, PublicInputValue, Transcript, VerifierData};
+    pub use plonk_pallet::{FullcodecRng, Proof, PublicInputValue, Transcript, VerifierData};
 
     /// Copuliing configuration trait with plonk_pallet.
     #[pallet::config]
@@ -56,7 +56,7 @@ The next, let's define the `plonk-pallet` function on your pallet. We are going 
         pub fn trusted_setup(
             origin: OriginFor<T>,
             val: u32,
-            rng: ParityRng,
+            rng: FullcodecRng,
         ) -> DispatchResultWithPostInfo {
             plonk_pallet::Pallet::<T>::trusted_setup(origin, val, rng)?;
             Ok(().into())
