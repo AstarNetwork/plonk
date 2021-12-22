@@ -147,17 +147,17 @@
 <h2 id="1define-the-plonk-pallet-as-depencencies"><a class="header" href="#1define-the-plonk-pallet-as-depencencies">1.Define the <code>plonk-pallet</code> as depencencies</a></h2>
 <p>First of all, you need to define the <code>plonk-pallet</code> when you start to implement your pallet. Please define as following.</p>
 <ul>
-<li>Cargo.toml</li>
+<li><your-pallet>/Cargo.toml</li>
 </ul>
 <pre><code>[dependencies]
-plonk-pallet = { version = '0.2', default-features = false }
+plonk-pallet = { git = &quot;https://github.com/AstarNetwork/plonk&quot;, branch = &quot;master&quot;, default-features = false }
 rand_core = {version=&quot;0.6&quot;, default-features = false }
 </code></pre>
 <p>The <code>plonk-pallet</code> depends on <code>rand_core</code> so please import it.</p>
 <h2 id="2couple-the-plonk-pallet-to-your-own-pallet"><a class="header" href="#2couple-the-plonk-pallet-to-your-own-pallet">2.Couple the <code>plonk-pallet</code> to your own pallet</a></h2>
 <p>The next, the <code>plonk-pallet</code> need to be coupled with your pallet. Please couple the pallet <code>Config</code> as following.</p>
 <ul>
-<li>src/lib.rs</li>
+<li><your-pallet>/src/lib.rs</li>
 </ul>
 <pre><code class="language-rs">#[frame_support::pallet]
 pub mod pallet {
@@ -165,7 +165,7 @@ pub mod pallet {
     use frame_system::pallet_prelude::*;
     pub use plonk_pallet::{FullcodecRng, Proof, PublicInputValue, Transcript, VerifierData};
 
-    /// Copuliing configuration trait with plonk_pallet.
+    /// Coupling configuration trait with plonk_pallet.
     #[pallet::config]
     pub trait Config: frame_system::Config + plonk_pallet::Config {
         /// The overarching event type.
@@ -176,7 +176,7 @@ pub mod pallet {
 <h2 id="3define-the-plonk-pallet-functions-on-your-pallet"><a class="header" href="#3define-the-plonk-pallet-functions-on-your-pallet">3.Define the <code>plonk-pallet</code> functions on your pallet</a></h2>
 <p>The next, let's define the <code>plonk-pallet</code> function on your pallet. We are going to define the <code>trusted_setup</code> function which generates the public parameters refered as to <code>srs</code> and the <code>verify</code> function which verified the proof. In this tutorial, we use <a href="https://github.com/JoshOrndorff/recipes/blob/master/pallets/sum-storage/src/lib.rs">sum-storage</a> pallet as example and add the <code>verify</code> function before set <code>Thing1</code> storage value on <code>set_thing_1</code>. If the <code>verify</code> is success, the <code>set_thing_1</code> can set <code>Thing1</code> value.</p>
 <ul>
-<li>src/lib.rs</li>
+<li><your-pallet>/src/lib.rs</li>
 </ul>
 <pre><code class="language-rs">    // The module's dispatchable functions.
     #[pallet::call]
@@ -216,7 +216,7 @@ pub mod pallet {
 <p>We already imported the <code>plonk-pallet</code> functions so we are going to import it to <code>TestRumtime</code> and define your customized <code>Circuit</code>.</p>
 <p>In order to use <code>plonk-pallet</code> in <code>TestRuntime</code>, we need to import <code>plonk-pallet</code> crate and define the pallet config to <code>construct_runtime</code> as following.</p>
 <ul>
-<li>src/tests.rs</li>
+<li>runtime/src/lib.rs</li>
 </ul>
 <pre><code>use crate::{self as sum_storage, Config};
 
@@ -243,7 +243,10 @@ construct_runtime!(
 );
 </code></pre>
 <p>As the final step of runtime configuration, we define the zk-SNARKs circuit and extend the <code>TestRuntime</code> config with it. You can replace <code>TestCircuit</code> with your own circuit.</p>
-<pre><code class="language-rs">// Implement a circuit that checks:
+<ul>
+<li>runtime/src/lib.rs</li>
+</ul>
+<pre><code>// Implement a circuit that checks:
 // 1) a + b = c where C is a PI
 // 2) a &lt;= 2^6
 // 3) b &lt;= 2^5
@@ -308,8 +311,10 @@ impl plonk_pallet::Config for TestRuntime {
 <p>With this step, we finish to setup the plonk runtime environment.</p>
 <h2 id="5test-whether-the-functions-work-correctly"><a class="header" href="#5test-whether-the-functions-work-correctly">5.Test whether the functions work correctly</a></h2>
 <p>The plonk functions is available on your pallet so we are going to test them as following tests.</p>
-<pre><code class="language-rs">
-/// The trusted setup test Ok and Err
+<ul>
+<li><your-pallet>/src/lib.rs</li>
+</ul>
+<pre><code>/// The trusted setup test Ok and Err
 #[test]
 fn trusted_setup() {
     new_test_ext().execute_with(|| {

@@ -17,7 +17,7 @@ sp-runtime = { version = '3.0', default-features = false}
 sp-std = { version = '3.0', default-features = false}
 
 # plonk pallet
-plonk-pallet = { version = '0.2', default-features = false }
+plonk-pallet = { git = "https://github.com/AstarNetwork/plonk", branch = "master", default-features = false }
 rand_core = {version="0.6", default-features = false }
 
 [dev-dependencies]

@@ -547,6 +547,72 @@ dependencies = [
 ]
 
 [[package]]
+name = "fullcodec-bls12_381"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8f8caa551ba53533382d2249c78e06b8d5b826080b444c37cd8c70f95445bc82"
+dependencies = [
+ "byteorder",
+ "dusk-bytes",
+ "fullcodec-subtle",
+ "parity-scale-codec",
+ "rand_core 0.6.3",
+ "serde",
+ "sp-std",
+]
+
+[[package]]
+name = "fullcodec-jubjub"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1b99780cbbab68bff1383e0c6e34ada43f3e7f924dae871aea851ab600841424"
+dependencies = [
+ "dusk-bytes",
+ "fullcodec-bls12_381",
+ "fullcodec-subtle",
+ "rand_core 0.6.3",
+]
+
+[[package]]
+name = "fullcodec-plonk"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2209edcf2e471087934dd1f1b0018bc31c1b7729bc1da87229022c6e9a913ed8"
+dependencies = [
+ "dusk-bytes",
+ "fullcodec-bls12_381",
+ "fullcodec-jubjub",
+ "hashbrown 0.9.1",
+ "itertools",
+ "merlin 3.0.0",
+ "parity-scale-codec",
+ "rand_core 0.6.3",
+ "serde",
+ "sp-std",
+]
+
+[[package]]
+name = "fullcodec-subtle"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b4f839f2e9a2d0e3e7a664972accb89e138c65e137059f8f15fb92502c7af658"
+dependencies = [
+ "parity-scale-codec",
+ "serde",
+]
+
+[[package]]
+name = "fullcodec_rand_xorshift"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b3486c190add349c8599ffd77137332e2ccf574f2c47fa8349a110f96883ae1c"
+dependencies = [
+ "parity-scale-codec",
+ "rand_core 0.6.3",
+ "sp-std",
+]
+
+[[package]]
 name = "funty"
 version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1055,24 +1121,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "624a8340c38c1b80fd549087862da4ba43e08858af025b236e509b6649fc13d5"
 
 [[package]]
-name = "parity-plonk"
-version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cacb3a8898d1cd50327b3bd391aeb33d6213ecf1fcd76d8183702dead9837eba"
-dependencies = [
- "dusk-bytes",
- "hashbrown 0.9.1",
- "itertools",
- "merlin 3.0.0",
- "parity-scale-codec",
- "plonk-bls12_381",
- "plonk-jubjub",
- "rand_core 0.6.3",
- "serde",
- "sp-std",
-]
-
-[[package]]
 name = "parity-scale-codec"
 version = "2.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1096,16 +1144,6 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn",
-]
-
-[[package]]
-name = "parity-subtle"
-version = "0.1.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "03986b14e8a6c5abb7d2ca75641973ef7202b8275e35828f80951e78cb3f9790"
-dependencies = [
- "parity-scale-codec",
- "serde",
 ]
 
 [[package]]
@@ -1139,17 +1177,6 @@ name = "parity-wasm"
 version = "0.41.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ddfc878dac00da22f8f61e7af3157988424567ab01d9920b962ef7dcbd7cd865"
-
-[[package]]
-name = "parity_rand_xorshift"
-version = "0.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "225c90113080de5b3623900110326bcdf86f3813c3594ab41bd6769964e64b0d"
-dependencies = [
- "parity-scale-codec",
- "rand_core 0.6.3",
- "sp-std",
-]
 
 [[package]]
 name = "parking_lot"
@@ -1213,44 +1240,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8b870d8c151b6f2fb93e84a13146138f05d02ed11c7e7c54f8826aaaf7c9f184"
 
 [[package]]
-name = "plonk-bls12_381"
-version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7957e60076d11d439bf4c983c0af773cc431994b7f4d84510911212c6f88f17d"
-dependencies = [
- "byteorder",
- "dusk-bytes",
- "parity-scale-codec",
- "parity-subtle",
- "rand_core 0.6.3",
- "serde",
- "sp-std",
-]
-
-[[package]]
-name = "plonk-jubjub"
-version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5dff2092d69924912726d65e283c3a1587275b6a087b85f8507b1bbdd0695f79"
-dependencies = [
- "dusk-bytes",
- "parity-subtle",
- "plonk-bls12_381",
- "rand_core 0.6.3",
-]
-
-[[package]]
 name = "plonk-pallet"
-version = "0.2.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6b5adf9cda58b0122f04591f1f8580ef19d156f344086c8094574196d492a558"
+version = "0.2.2"
+source = "git+https://github.com/AstarNetwork/plonk?branch=master#7f3c71960a0475b68db4d1cc5054f902f55340e3"
 dependencies = [
  "frame-support",
  "frame-system",
- "parity-plonk",
+ "fullcodec-jubjub",
+ "fullcodec-plonk",
+ "fullcodec_rand_xorshift",
  "parity-scale-codec",
- "parity_rand_xorshift",
- "plonk-jubjub",
  "rand 0.8.4",
  "rand_core 0.6.3",
  "serde",

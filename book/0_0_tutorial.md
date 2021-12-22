@@ -17,7 +17,7 @@ First of all, you need to define the `plonk-pallet` when you start to implement 
 - <your-pallet>/Cargo.toml
 ```
 [dependencies]
-plonk-pallet = { version = '0.2', default-features = false }
+plonk-pallet = { git = "https://github.com/AstarNetwork/plonk", branch = "master", default-features = false }
 rand_core = {version="0.6", default-features = false }
 ```
 
