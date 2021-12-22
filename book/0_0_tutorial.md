@@ -14,7 +14,7 @@ To use `plonk-pallet` on substrate-based blockchain, we need to do following ste
 ## 1.Define the `plonk-pallet` as depencencies
 First of all, you need to define the `plonk-pallet` when you start to implement your pallet. Please define as following.
 
-- Cargo.toml
+- <your-pallet>/Cargo.toml
 ```
 [dependencies]
 plonk-pallet = { version = '0.2', default-features = false }
@@ -26,7 +26,7 @@ The `plonk-pallet` depends on `rand_core` so please import it.
 ## 2.Couple the `plonk-pallet` to your own pallet
 The next, the `plonk-pallet` need to be coupled with your pallet. Please couple the pallet `Config` as following.
 
-- src/lib.rs
+- <your-pallet>/src/lib.rs
 ```rs
 #[frame_support::pallet]
 pub mod pallet {
@@ -34,7 +34,7 @@ pub mod pallet {
     use frame_system::pallet_prelude::*;
     pub use plonk_pallet::{FullcodecRng, Proof, PublicInputValue, Transcript, VerifierData};
 
-    /// Copuliing configuration trait with plonk_pallet.
+    /// Coupling configuration trait with plonk_pallet.
     #[pallet::config]
     pub trait Config: frame_system::Config + plonk_pallet::Config {
         /// The overarching event type.
@@ -46,7 +46,7 @@ With this step, you can use the `plonk-pallet` in your pallet through `Module`.
 ## 3.Define the `plonk-pallet` functions on your pallet
 The next, let's define the `plonk-pallet` function on your pallet. We are going to define the `trusted_setup` function which generates the public parameters refered as to `srs` and the `verify` function which verified the proof. In this tutorial, we use [sum-storage](https://github.com/JoshOrndorff/recipes/blob/master/pallets/sum-storage/src/lib.rs) pallet as example and add the `verify` function before set `Thing1` storage value on `set_thing_1`. If the `verify` is success, the `set_thing_1` can set `Thing1` value.
 
-- src/lib.rs
+- <your-pallet>/src/lib.rs
 ```rs
     // The module's dispatchable functions.
     #[pallet::call]
@@ -88,7 +88,7 @@ We already imported the `plonk-pallet` functions so we are going to import it to
 
 In order to use `plonk-pallet` in `TestRuntime`, we need to import `plonk-pallet` crate and define the pallet config to `construct_runtime` as following.
 
-- src/tests.rs
+- runtime/src/lib.rs
 ```
 use crate::{self as sum_storage, Config};
 
@@ -117,7 +117,8 @@ construct_runtime!(
 
 As the final step of runtime configuration, we define the zk-SNARKs circuit and extend the `TestRuntime` config with it. You can replace `TestCircuit` with your own circuit.
 
-```rs
+- runtime/src/lib.rs
+```
 // Implement a circuit that checks:
 // 1) a + b = c where C is a PI
 // 2) a <= 2^6
@@ -184,8 +185,9 @@ With this step, we finish to setup the plonk runtime environment.
 
 ## 5.Test whether the functions work correctly
 The plonk functions is available on your pallet so we are going to test them as following tests.
-```rs
 
+- <your-pallet>/src/lib.rs
+```
 /// The trusted setup test Ok and Err
 #[test]
 fn trusted_setup() {
