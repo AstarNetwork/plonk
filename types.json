@@ -1,0 +1,61 @@
+{
+    "VerifierData": {
+        "key": "VerifierKey",
+        "public_inputs_indexes": "Vec<u32>"
+    },
+    "VerifierKey": {
+        "n": "u32",
+        "arithmetic": "ArithmeticVerifierKey",
+        "logic": "LogicVerifierKey",
+        "range": "RangeVerifierKey",
+        "fixed_base": "FixedBaseVerifierKey",
+        "variable_base": "VariableVaseVerifierKey",
+        "lookup": "LookupVerifierKey",
+        "permutation": "PermutationVerifierKey"
+    },
+    "ArithmeticVerifierKey": {
+        "q_m": "Commitment",
+        "q_l": "Commitment",
+        "q_r": "Commitment",
+        "q_o": "Commitment",
+        "q_4": "Commitment",
+        "q_c": "Commitment",
+        "q_arith": "Commitment"
+    },
+    "Commitment": "G1Affine",
+    "G1Affine": {
+        "x": "Fp",
+        "y": "Fp",
+        "infinity": "Choice"
+    },
+    "Fp": "[u64;6]",
+    "Choice": "u8",
+    "LogicVerifierKey": {
+        "q_c": "Commitment",
+        "q_logic": "Commitment"
+    },
+    "RangeVerifierKey": {
+        "q_range": "Commitment"
+    },
+    "FixedBaseVerifierKey": {
+        "q_l": "Commitment",
+        "q_r": "Commitment",
+        "q_fixed_group_add": "Commitment"
+    },
+    "VariableVaseVerifierKey": {
+        "q_variable_group_add": "Commitment"
+    },
+    "LookupVerifierKey": {
+        "q_lookup": "Commitment",
+        "table_1": "Commitment",
+        "table_2": "Commitment",
+        "table_3": "Commitment",
+        "table_4": "Commitment"
+    },
+    "PermutationVerifierKey": {
+        "left_sigma": "Commitment",
+        "right_sigma": "Commitment",
+        "out_sigma": "Commitment",
+        "fourth_sigma": "Commitment"
+    }
+}
