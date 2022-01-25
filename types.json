@@ -104,5 +104,11 @@
     },
     "BlsScalar": "[u64;4]",
     "PublicInputValue": "Vec<BlsScalar>",
-    "Transcript": "[u8]"
+    "Transcript": "[u8]",
+    "FullcodecRng": {
+        "x": "(<u32>)",
+        "y": "(<u32>)",
+        "z": "(<u32>)",
+        "w": "(<u32>)"
+    }
 }
