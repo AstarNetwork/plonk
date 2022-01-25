@@ -102,5 +102,7 @@
         "table_eval": "BlsScalar",
         "table_next_eval": "BlsScalar"
     },
-    "BlsScalar": "[u64;4]"
+    "BlsScalar": "[u64;4]",
+    "PublicInputValue": "Vec<BlsScalar>",
+    "Transcript": "[u8]"
 }
