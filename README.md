@@ -1,6 +1,6 @@
 # Plonk For Substrate
  [![GitHub license](https://img.shields.io/badge/license-GPL3%2FApache2-blue)](#LICENSE) [![crates.io badge](https://img.shields.io/crates/v/plonk-pallet.svg)](https://crates.io/crates/plonk-pallet) [![Pallet Test](https://github.com/PlasmNetwork/plonk/actions/workflows/pallet.yml/badge.svg)](https://github.com/PlasmNetwork/plonk/actions/workflows/pallet.yml)  
-This is `plonk` pallet implemented as an extension of [duck-network plonk](https://github.com/dusk-network/plonk).
+This is `plonk` pallet implemented as an extension of [dusk-network plonk](https://github.com/dusk-network/plonk).
 
 ## Abstract
 
