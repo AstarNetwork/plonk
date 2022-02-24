@@ -20,3 +20,7 @@ The `pallet` dependencies rustdoc.
 - [`plonk-pallet`](https://docs.rs/plonk-pallet/latest/plonk_pallet/)  
 - [`plonk-pallet-rpc`](https://docs.rs/plonk-pallet-rpc/latest/plonk_pallet_rpc/)  
 - [`plonk-runtime-api`](https://docs.rs/plonk-runtime-api/latest/plonk_runtime_api/)
+
+## Acknowledgements
+- Reference [implementation](https://github.com/AztecProtocol/barretenberg) by Aztec Protocol
+- Initial rust [implementation](https://github.com/dusk-network/plonk) of PLONK by Dusk Network, originally forked from dusk-network/plonk
